@@ -14,6 +14,7 @@
         "clocale": "cpp",
         "cmath": "cpp",
         "complex": "cpp",
+        "condition_variable": "cpp",
         "cstdarg": "cpp",
         "cstdint": "cpp",
         "cstdio": "cpp",
@@ -39,12 +40,15 @@
         "map": "cpp",
         "mutex": "cpp",
         "new": "cpp",
+        "numbers": "cpp",
         "optional": "cpp",
         "print": "cpp",
         "queue": "cpp",
         "ratio": "cpp",
         "regex": "cpp",
+        "semaphore": "cpp",
         "set": "cpp",
+        "span": "cpp",
         "sstream": "cpp",
         "stack": "cpp",
         "stdexcept": "cpp",
@@ -55,6 +59,7 @@
         "unordered_map": "cpp",
         "variant": "cpp",
         "vector": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "algorithmresult": "cpp"
     }
 }
