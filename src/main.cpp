@@ -4,6 +4,7 @@
 
 #include "grid/Grid.h"
 #include "algorithms/BFS.h"
+#include "algorithms/DFS.h"
 
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
@@ -31,9 +32,18 @@ int main() {
 
     Grid g(grid);
     g.printGrid();
+    Grid g2(grid);
+    g2.printGrid();
+
+    std::cout << "----------- BFS -----------" << std::endl;
 
     BFS bfs(g);
     bfs.runAlgorithm();
+
+    std::cout << "----------- DFS -----------" << std::endl;
+
+    DFS dfs(g2);
+    dfs.runAlgorithm();
 
     return 0;
 }
