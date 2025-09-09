@@ -15,6 +15,7 @@ set(SOURCES
     src/grid/Grid.cpp
     src/grid/node/Node.cpp
     src/algorithms/BFS.cpp
+    src/algorithms/DFS.cpp
 )
 
 add_executable(Pathfinding ${SOURCES})
