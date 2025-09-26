@@ -70,7 +70,7 @@ void Grid::printGridAndPath(std::vector<Node> path) {
             bool found = false;
             for(int i=0; i<path.size(); i++) {
                 if(n.getPosition() == path[i].getPosition() && path[i].getType() == NodeType::EMPTY) {
-                    std::cout << "*";
+                    std::cout << "+";
                     found = true;
                 }
             }
