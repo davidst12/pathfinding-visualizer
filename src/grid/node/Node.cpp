@@ -41,7 +41,7 @@ char Node::getChar() {
     switch (type_)
     {
     case NodeType::EMPTY:
-        if(visited_) return 'v';
+        if(visited_) return '#';
         else return '-';
     case NodeType::WALL:
         return 'X';

@@ -9,17 +9,17 @@
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
 
-    /*std::vector<std::string> grid =
-    { "XXXXXXXX"
-    , "XOOOOOOX"
-    , "XOSOOOOX"
-    , "XOOOOOOX"
-    , "XOOOOOOX"
-    , "XOOOOOOX"
-    , "XOEOOOOX"
-    , "XXXXXXXX"
-    };*/
     std::vector<std::string> grid =
+    { "XXXXXXXXXXXXXXXXXXXXXXXXX"
+    , "XOOOOOOOOOOOOOOXOOOOOOOOX"
+    , "XOSOOOOOOOOXOOOXOOOXOOOOX"
+    , "XXXXXXXXXXXXOOXXOOOXOOOOX"
+    , "XOOOOOOXOOOOOOOOOOOXOOOOX"
+    , "XOXXXOOXXXXXXXXXXXXXXOXXX"
+    , "XOEOXOOOOOOOOOOOOOOOOOOOX"
+    , "XXXXXXXXXXXXXXXXXXXXXXXXX"
+    };
+    /*std::vector<std::string> grid =
     { "XXXXXXXX"
     , "XOOOOOOX"
     , "XOSXOOOX"
@@ -28,7 +28,7 @@ int main() {
     , "XOXOOOOX"
     , "XOEOXOOX"
     , "XXXXXXXX"
-    };
+    };*/
 
     Grid g(grid);
     g.printGrid();

@@ -34,6 +34,7 @@ void BFS::runAlgorithm() {
 void BFS::processNode() {
     Node* current_node = nodes_to_process_queue_.front();
     current_node->setVisited(true);
+    result_.nodes_visited_count += 1;
 
     if(current_node->getType() == NodeType::END) {
         algorithmStateChange(AlgorithmState::PATH_FOUND);
@@ -49,7 +50,6 @@ void BFS::checkNeightbors(Node* current_node) {
         Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
 
         if(neightbor_node->isVisited() == false && neightbor_node->getType() != NodeType::WALL) {
-            result_.nodes_visited_count += 1;
             neightbor_node->setParent(current_node);
             neightbor_node->setVisited(true);
             nodes_to_process_queue_.push(neightbor_node);
@@ -85,5 +85,6 @@ void BFS::generateStatistics() {
     std::cout << "Algorithm statistics: \n"
         << "  Nodes visited: " << result_.nodes_visited_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
         << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
-        << "  Time spent (microseconds): " << result_.time.count() << std::endl;
+        << "  Time spent (microseconds): " << result_.time.count() << std::endl
+        << "  Path size: " << result_.path.size() << std::endl;
 }
