@@ -6,7 +6,34 @@ Node::Node(Position position, NodeType type)
     : position_(position)
     , type_(type)
     , visited_(false)
-    , parent_(nullptr) {}
+    , parent_(nullptr)
+    , distance_(INT_MAX) 
+{
+    switch (type_)
+    {
+    case NodeType::EMPTY:
+        weight_ = 1;
+        break;
+    case NodeType::ROAD:
+        weight_ = 1;
+        break;
+    case NodeType::GRASS:
+        weight_ = 3;
+        break;
+    case NodeType::WATER:
+        weight_ = 5;
+        break;
+    case NodeType::START:
+        weight_ = 0;
+        break;
+    case NodeType::END:
+        weight_ = 0;
+        break;
+    default:
+        weight_ = 100;
+        break;
+    }
+}
 
 bool Node::isVisited() {
     return visited_;
@@ -49,6 +76,12 @@ char Node::getChar() {
         return 'S';
     case NodeType::END:
         return 'E';
+    case NodeType::ROAD:
+        return 'R';
+    case NodeType::GRASS:
+        return 'G';    
+    case NodeType::WATER:
+        return 'W';
     default:
         break;
     }

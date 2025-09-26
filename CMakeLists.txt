@@ -16,6 +16,7 @@ set(SOURCES
     src/grid/node/Node.cpp
     src/algorithms/BFS.cpp
     src/algorithms/DFS.cpp
+    src/algorithms/Dijkstra.cpp
 )
 
 add_executable(Pathfinding ${SOURCES})

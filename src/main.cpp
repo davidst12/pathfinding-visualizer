@@ -5,11 +5,12 @@
 #include "grid/Grid.h"
 #include "algorithms/BFS.h"
 #include "algorithms/DFS.h"
+#include "algorithms/Dijkstra.h"
 
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
 
-    std::vector<std::string> grid =
+    /*std::vector<std::string> grid =
     { "XXXXXXXXXXXXXXXXXXXXXXXXX"
     , "XOOOOOOOOOOOOOOXOOOOOOOOX"
     , "XOSOOOOOOOOXOOOXOOOXOOOOX"
@@ -18,7 +19,7 @@ int main() {
     , "XOXXXOOXXXXXXXXXXXXXXOXXX"
     , "XOEOXOOOOOOOOOOOOOOOOOOOX"
     , "XXXXXXXXXXXXXXXXXXXXXXXXX"
-    };
+    };*/
     /*std::vector<std::string> grid =
     { "XXXXXXXX"
     , "XOOOOOOX"
@@ -29,12 +30,22 @@ int main() {
     , "XOEOXOOX"
     , "XXXXXXXX"
     };*/
+    std::vector<std::string> grid =
+    { "XXXXXXXX"
+    , "XOOOOOOX"
+    , "XOOSOOOX"
+    , "XWWWWGGX"
+    , "XWWWWWGX"
+    , "XWWWWOOX"
+    , "XOOEOOOX"
+    , "XXXXXXXX"
+    };
 
     Grid g(grid);
     g.printGrid();
     Grid g2(grid);
-    g2.printGrid();
-
+    Grid g3(grid);
+    
     std::cout << "----------- BFS -----------" << std::endl;
 
     BFS bfs(g);
@@ -44,6 +55,12 @@ int main() {
 
     DFS dfs(g2);
     dfs.runAlgorithm();
+    
+   std::cout << "----------- Dijkstra -----------" << std::endl;
+
+   Dijkstra dijkstra(g3);
+   dijkstra.runAlgorithm();
+
 
     return 0;
 }

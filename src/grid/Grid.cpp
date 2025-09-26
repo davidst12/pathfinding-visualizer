@@ -35,7 +35,19 @@ Grid::Grid(std::vector<std::string> grid)
                 aux.push_back(Node(Position(index, columnIndex_), NodeType::END));
                 grid_info_.empty_nodes_count_ += 1;
                 endPosition = Position(index, columnIndex_);
-                break;  
+                break;
+            case 'R':
+                aux.push_back(Node(Position(index, columnIndex_), NodeType::ROAD));
+                grid_info_.empty_nodes_count_ += 1;
+                break;
+            case 'G':
+                aux.push_back(Node(Position(index, columnIndex_), NodeType::GRASS));
+                grid_info_.empty_nodes_count_ += 1;
+                break;
+            case 'W':
+                aux.push_back(Node(Position(index, columnIndex_), NodeType::WATER));
+                grid_info_.empty_nodes_count_ += 1;
+                break;
             default:
                 break;
             }
@@ -69,7 +81,7 @@ void Grid::printGridAndPath(std::vector<Node> path) {
             Node n = grid_[columnIndex][rowIndex];
             bool found = false;
             for(int i=0; i<path.size(); i++) {
-                if(n.getPosition() == path[i].getPosition() && path[i].getType() == NodeType::EMPTY) {
+                if(n.getPosition() == path[i].getPosition() && path[i].getType() != NodeType::END) {
                     std::cout << "+";
                     found = true;
                 }

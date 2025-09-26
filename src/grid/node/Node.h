@@ -89,9 +89,16 @@ public:
      */
     void printNodeInformation();
 
+    void setDistance(int distance) { distance_ = distance; }
+    int getDistance() { return distance_; }
+
+    int getWeight() { return weight_; }
+
 private:
     Position position_; ///< La posición del nodo en la rejilla.
     bool visited_;      ///< Indica si el nodo ha sido visitado durante la ejecución de un algoritmo.
+    int distance_;     ///< La distancia desde el nodo inicial (utilizado en algoritmos como Dijkstra).
+    int weight_;       ///< El peso del nodo (utilizado en algoritmos de búsqueda ponderada).
     NodeType type_;     ///< El tipo de nodo (vacío, muro, inicio, fin).
     Node* parent_;      ///< Puntero al nodo padre (utilizado en algoritmos de búsqueda).
 };
