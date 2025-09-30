@@ -33,6 +33,7 @@ Node::Node(Position position, NodeType type)
         weight_ = 100;
         break;
     }
+    acc_weight_ = weight_;
 }
 
 bool Node::isVisited() {

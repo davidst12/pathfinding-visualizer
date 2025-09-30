@@ -3,9 +3,9 @@
 #include "common/CompareNodes.h"
 #include <queue>
 
-class Dijkstra {
+class AStar {
     public:
-        Dijkstra(Grid& grid);
+        AStar(Grid& grid);
         void runAlgorithm();
     private:
         Grid& grid_;
@@ -21,6 +21,7 @@ class Dijkstra {
 
         void processNode();
         void checkNeightbors(Node* current_node);
+        int heuristic(Position a, Position b);
         std::vector<Node> getPath();
         void algorithmStateChange(AlgorithmState state);
         void generateStatistics();

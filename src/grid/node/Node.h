@@ -94,11 +94,19 @@ public:
 
     int getWeight() { return weight_; }
 
+    void setAccWeight(int acc_weight) { acc_weight_ = acc_weight; }
+    int getAccWeight() { return acc_weight_; }
+
+    void setProcessed(bool p) { processed_ = p; }
+    bool isProcessed() { return processed_; }
+
 private:
     Position position_; ///< La posición del nodo en la rejilla.
     bool visited_;      ///< Indica si el nodo ha sido visitado durante la ejecución de un algoritmo.
-    int distance_;     ///< La distancia desde el nodo inicial (utilizado en algoritmos como Dijkstra).
-    int weight_;       ///< El peso del nodo (utilizado en algoritmos de búsqueda ponderada).
+    bool processed_;    ///< Indica si el nodo ha sido procesado (utilizado en algunos algoritmos).
+    int distance_;      ///< La distancia desde el nodo inicial (utilizado en algoritmos como Dijkstra).
+    int weight_;        ///< El peso del nodo (utilizado en algoritmos de búsqueda ponderada).
+    int acc_weight_;    ///< El peso acumulado del nodo (utilizado en algoritmos de búsqueda ponderada).
     NodeType type_;     ///< El tipo de nodo (vacío, muro, inicio, fin).
     Node* parent_;      ///< Puntero al nodo padre (utilizado en algoritmos de búsqueda).
 };

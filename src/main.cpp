@@ -6,20 +6,22 @@
 #include "algorithms/BFS.h"
 #include "algorithms/DFS.h"
 #include "algorithms/Dijkstra.h"
+#include "algorithms/AStar.h"
 
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
 
-    /*std::vector<std::string> grid =
-    { "XXXXXXXXXXXXXXXXXXXXXXXXX"
-    , "XOOOOOOOOOOOOOOXOOOOOOOOX"
-    , "XOSOOOOOOOOXOOOXOOOXOOOOX"
-    , "XXXXXXXXXXXXOOXXOOOXOOOOX"
-    , "XOOOOOOXOOOOOOOOOOOXOOOOX"
-    , "XOXXXOOXXXXXXXXXXXXXXOXXX"
-    , "XOEOXOOOOOOOOOOOOOOOOOOOX"
-    , "XXXXXXXXXXXXXXXXXXXXXXXXX"
-    };*/
+    std::vector<std::string> grid =
+    { "XXXXXXXXXXXXXXXX"
+    , "XOSOOOWOOOOOOOOX"
+    , "XOXXXXXXOXXXXXOX"
+    , "XOOOOXOOOOOOXOOX"
+    , "XOXXOXOXXXOOXOOX"
+    , "XOOGOXOOOOWOOOOX"
+    , "XOXXXXXXXOXXXXXX"
+    , "XOWWWWOEOOOOOOOX"
+    , "XXXXXXXXXXXXXXXX"
+    };
     /*std::vector<std::string> grid =
     { "XXXXXXXX"
     , "XOOOOOOX"
@@ -30,21 +32,23 @@ int main() {
     , "XOEOXOOX"
     , "XXXXXXXX"
     };*/
+    /*
     std::vector<std::string> grid =
     { "XXXXXXXX"
     , "XOOOOOOX"
     , "XOOSOOOX"
-    , "XWWWWGGX"
-    , "XWWWWWGX"
+    , "XWWWWGOX"
+    , "XWWWWWOX"
     , "XWWWWOOX"
     , "XOOEOOOX"
     , "XXXXXXXX"
-    };
+    };*/
 
     Grid g(grid);
     g.printGrid();
     Grid g2(grid);
     Grid g3(grid);
+    Grid g4(grid);
     
     std::cout << "----------- BFS -----------" << std::endl;
 
@@ -60,6 +64,11 @@ int main() {
 
    Dijkstra dijkstra(g3);
    dijkstra.runAlgorithm();
+
+   std::cout << "----------- A* -----------" << std::endl;
+
+   AStar a_star(g4);
+   a_star.runAlgorithm();
 
 
     return 0;

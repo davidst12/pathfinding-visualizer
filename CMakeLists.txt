@@ -17,6 +17,7 @@ set(SOURCES
     src/algorithms/BFS.cpp
     src/algorithms/DFS.cpp
     src/algorithms/Dijkstra.cpp
+    src/algorithms/AStar.cpp
 )
 
 add_executable(Pathfinding ${SOURCES})
