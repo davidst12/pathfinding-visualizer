@@ -4,9 +4,7 @@
 #include <vector>
 #include <chrono>
 
-#include "grid/Grid.h"
-#include "common/AlgorithmResult.h"
-
+#include "algorithms/IAlgorithm.h"
 
 /**
  * @class DFS
@@ -20,7 +18,7 @@
  * - Puede no encontrar el camino más corto, pero es útil para exploración completa.
  * - Genera estadísticas de la ejecución, incluyendo número de nodos visitados y tiempo total.
  */
-class DFS
+class DFS : public IAlgorithm
 {
 public:
     /**
@@ -37,14 +35,14 @@ public:
      * explora nodos en profundidad, y termina cuando se encuentra el nodo objetivo o 
      * se exploran todos los nodos posibles.
      */
-    void runAlgorithm();
+    void runAlgorithm() override;
     
 private:
-    Grid& grid_; ///< Referencia al grid donde se realiza la búsqueda.
+    //Grid grid_; ///< Referencia al grid donde se realiza la búsqueda.
     
     std::stack<Node*> nodes_to_process_stack_; ///< Pila de nodos a procesar durante el algoritmo.
     
-    AlgorithmResult result_; ///< Resultados del algoritmo (camino encontrado, estadísticas, etc.).
+    //AlgorithmResult result_; ///< Resultados del algoritmo (camino encontrado, estadísticas, etc.).
     
     /**
      * @brief Orden en que se comprobarán los vecinos de un nodo.
@@ -52,12 +50,12 @@ private:
      * El orden es: Norte, Sur, Este, Oeste. Este orden afecta cómo se explora el grid,
      * y puede influir en el camino encontrado por DFS.
      */
-    Position neighbors_check_order[4] = {
+    /*Position neighbors_check_order[4] = {
         Position(0, -1),  // North
         Position(0, 1),   // South
         Position(1, 0),   // East
         Position(-1, 0),  // West
-    };
+    };*/
 
     /**
      * @brief Procesa el nodo actual en la pila.
@@ -65,7 +63,7 @@ private:
      * Marca el nodo como visitado, asigna el nodo padre si corresponde, y llama
      * a la exploración de vecinos.
      */
-    void processNode();
+    void processNode() override;
 
     /**
      * @brief Comprueba y agrega vecinos válidos del nodo actual.
@@ -79,7 +77,7 @@ private:
      * 
      * @param current_node Nodo actualmente en proceso.
      */
-    void checkNeightbors(Node* current_node);
+    void checkNeightbors(Node* current_node) override;
 
     /**
      * @brief Cambia el estado del algoritmo.
@@ -92,7 +90,7 @@ private:
      * 
      * @param state Nuevo estado del algoritmo.
      */
-    void algorithmStateChange(AlgorithmState state);
+    void algorithmStateChange(AlgorithmState state) override;
 
     /**
      * @brief Reconstruye el camino encontrado.
@@ -103,7 +101,7 @@ private:
      * 
      * @return Vector de nodos que representa el camino desde inicio hasta fin.
      */
-    std::vector<Node> getPath();
+    std::vector<Node> getPath() override;
 
     /**
      * @brief Genera estadísticas de ejecución del algoritmo.
@@ -115,5 +113,5 @@ private:
      * 
      * Muestra los resultados en consola.
      */
-    void generateStatistics();
+    void generateStatistics() override;
 };

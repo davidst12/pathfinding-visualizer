@@ -5,6 +5,6 @@
 class CompareNodes {
     public:
         bool operator()(Node* a, Node* b) {
-            return a->getDistance() > b->getDistance();
+            return a->getCost() > b->getCost();
         }
 };

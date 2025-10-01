@@ -31,6 +31,7 @@ public:
      * @param grid Un vector de strings que representa el grid.
      */
     Grid(std::vector<std::string> grid);
+    Grid() = default;
 
     Node* startNode_; ///< Nodo de inicio del algoritmo
     Node* endNode_;   ///< Nodo de fin del algoritmo

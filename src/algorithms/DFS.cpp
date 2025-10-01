@@ -1,9 +1,7 @@
 #include "DFS.h"
 
-DFS::DFS(Grid& grid)
-    :grid_(grid)
+DFS::DFS(Grid& grid) : IAlgorithm(grid)
 {
-    algorithmStateChange(AlgorithmState::IDLE);
     // El nodo inicial siempre va a ser visitado
     result_.nodes_visited_count = 1;
     result_.nodes_visited_ratio = 0;

@@ -4,8 +4,7 @@
 #include <vector>
 #include <chrono>
 
-#include "grid/Grid.h"
-#include "common/AlgorithmResult.h"
+#include "algorithms/IAlgorithm.h"
 
 /**
  * @class BFS
@@ -20,7 +19,7 @@
  * 
  * El algoritmo se detiene cuando se encuentra el nodo de fin o cuando no hay más nodos por explorar.
  */
-class BFS
+class BFS : public IAlgorithm
 {
 public:
     /**
@@ -37,14 +36,14 @@ public:
      * Este método inicia la ejecución del algoritmo. Se encargará de procesar los nodos en la cola y 
      * buscar el camino más corto entre el nodo de inicio y el nodo de fin. 
      */
-    void runAlgorithm();
+    void runAlgorithm() override;
     
 private:
-    Grid& grid_; ///< Rejilla donde se realiza la búsqueda.
+    //Grid grid_; ///< Rejilla donde se realiza la búsqueda.
     
     std::queue<Node*> nodes_to_process_queue_; ///< Cola de nodos a procesar durante el algoritmo.
     
-    AlgorithmResult result_; ///< Resultados del algoritmo (camino encontrado, estadísticas, etc.).
+    //AlgorithmResult result_; ///< Resultados del algoritmo (camino encontrado, estadísticas, etc.).
     
     /**
      * @brief Array que define el orden de comprobación de los vecinos de un nodo.
@@ -52,12 +51,12 @@ private:
      * El orden es: Norte, Sur, Este, Oeste. Este orden determina cómo se explorarán los nodos vecinos
      * durante la ejecución del algoritmo BFS.
      */
-    Position neighbors_check_order[4] = {
+    /*Position neighbors_check_order[4] = {
         Position(0, -1),  // North
         Position(0, 1),   // South
         Position(1, 0),   // East
         Position(-1, 0),  // West
-    };
+    };*/
 
     /**
      * @brief Procesa el nodo actual en la cola.
@@ -65,7 +64,7 @@ private:
      * Este método es responsable de procesar un nodo de la cola, marcarlo como visitado, 
      * y generar las nuevas posiciones a explorar.
      */
-    void processNode();
+    void processNode() override;
 
     /**
      * @brief Comprueba los vecinos del nodo actual.
@@ -74,7 +73,7 @@ private:
      * a procesar si son válidos (es decir, si no han sido visitados y son caminables).
      * @param current_node Puntero al nodo actual que se está procesando.
      */
-    void checkNeightbors(Node* current_node);
+    void checkNeightbors(Node* current_node) override;
 
     /**
      * @brief Cambia el estado del algoritmo.
@@ -82,7 +81,7 @@ private:
      * Actualiza el estado del algoritmo (por ejemplo, IDLE, RUNNING, PATH_FOUND, etc.).
      * @param state El nuevo estado del algoritmo.
      */
-    void algorithmStateChange(AlgorithmState state);
+    void algorithmStateChange(AlgorithmState state) override;
 
     /**
      * @brief Obtiene el camino encontrado por el algoritmo.
@@ -91,7 +90,7 @@ private:
      * utilizando los punteros de los nodos padres.
      * @return Un vector de nodos que representa el camino encontrado.
      */
-    std::vector<Node> getPath();
+    std::vector<Node> getPath() override;
 
     /**
      * @brief Genera y muestra por terminal las estadísticas del algoritmo.
@@ -99,5 +98,5 @@ private:
      * Este método calcula y almacena las estadísticas del algoritmo (tiempo de ejecución, 
      * número de nodos visitados, etc.) para poder presentarlas al usuario.
      */
-    void generateStatistics();
+    void generateStatistics() override;
 };

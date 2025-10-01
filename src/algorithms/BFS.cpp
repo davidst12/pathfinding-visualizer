@@ -1,9 +1,7 @@
 #include "BFS.h"
 
-BFS::BFS(Grid& grid)
-    :grid_(grid)
+BFS::BFS(Grid& grid) : IAlgorithm(grid)
 {
-    algorithmStateChange(AlgorithmState::IDLE);
     // El nodo inicial siempre va a ser visitado
     result_.nodes_visited_count = 1;
     result_.nodes_visited_ratio = 0;

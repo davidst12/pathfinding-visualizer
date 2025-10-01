@@ -7,7 +7,7 @@ Node::Node(Position position, NodeType type)
     , type_(type)
     , visited_(false)
     , parent_(nullptr)
-    , distance_(INT_MAX) 
+    , cost_(INT_MAX) 
 {
     switch (type_)
     {
@@ -33,7 +33,7 @@ Node::Node(Position position, NodeType type)
         weight_ = 100;
         break;
     }
-    acc_weight_ = weight_;
+    path_weight_ = 0;
 }
 
 bool Node::isVisited() {

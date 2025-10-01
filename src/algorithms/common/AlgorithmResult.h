@@ -25,11 +25,11 @@ enum class AlgorithmState {
  * @brief Estructura que almacena el resultado de la ejecución de un algoritmo de búsqueda de caminos.
  */
 struct AlgorithmResult {
-    AlgorithmState state;              ///< Estado actual del algoritmo (idle, running, path found, etc.)
-    std::vector<Node> path;            ///< Camino encontrado por el algoritmo (si es que se encuentra un camino)
-    int nodes_visited_count;           ///< Número de nodos visitados durante la ejecución del algoritmo
-    float nodes_visited_ratio;         ///< Proporción de nodos visitados respecto al total de nodos en la rejilla
-    std::chrono::microseconds time;    ///< Tiempo de ejecución del algoritmo en microsegundos
+    AlgorithmState state = AlgorithmState::IDLE;  ///< Estado actual del algoritmo (idle, running, path found, etc.)
+    std::vector<Node> path;                       ///< Camino encontrado por el algoritmo (si es que se encuentra un camino)
+    int nodes_visited_count = 0;                  ///< Número de nodos visitados durante la ejecución del algoritmo
+    float nodes_visited_ratio = 0;                ///< Proporción de nodos visitados respecto al total de nodos en la rejilla
+    std::chrono::microseconds time;               ///< Tiempo de ejecución del algoritmo en microsegundos
 };
 
 /**

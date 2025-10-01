@@ -1,16 +1,12 @@
 #include<algorithms/AStar.h>
 
-AStar::AStar(Grid& grid)
-    :grid_(grid)
-{
-    algorithmStateChange(AlgorithmState::IDLE);
-    // El nodo inicial siempre va a ser visitado
+AStar::AStar(Grid& grid) : IAlgorithm(grid) {
     result_.nodes_visited_count = 1;
     result_.nodes_visited_ratio = 0;
 }
 
 void AStar::runAlgorithm() {
-    grid_.startNode_->setDistance(0);
+    grid_.startNode_->setCost(0);
     priority_node_queue_.push(grid_.startNode_);
     algorithmStateChange(AlgorithmState::RUNNING);
     
@@ -51,19 +47,20 @@ void AStar::checkNeightbors(Node* current_node) {
         Position neightbor_position = current_node->getPosition() + neighbors_check_order[index];
         Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
 
-        if(/*neightbor_node->isProcessed() ||*/ neightbor_node->getType() == NodeType::WALL) continue;
-
-        int new_weight = current_node->getAccWeight() + neightbor_node->getWeight();
-        if(!neightbor_node->isVisited() || new_weight < neightbor_node->getAccWeight()) {
-            //neightbor_node->setAccWeight(current_node->getAccWeight() + neightbor_node->getWeight());
-            neightbor_node->setAccWeight(new_weight);
-            neightbor_node->setDistance(neightbor_node->getAccWeight()
-                + heuristic(neightbor_node->getPosition(), grid_.endNode_->getPosition())
-            );
-            neightbor_node->setParent(current_node);
-            neightbor_node->setVisited(true);
-            priority_node_queue_.push(neightbor_node);
+        if(neightbor_node->getType() == NodeType::WALL) continue;
+        else if(neightbor_node->isVisited()) {
+            int tentative_cost = current_node->getPathWeight() + neightbor_node->getWeight();
+            if(tentative_cost >= neightbor_node->getPathWeight()) continue;
         }
+
+        neightbor_node->setPathWeight(current_node->getPathWeight() + neightbor_node->getWeight());
+        neightbor_node->setCost(neightbor_node->getPathWeight()
+            + heuristic(neightbor_node->getPosition(), grid_.endNode_->getPosition())
+        );
+        neightbor_node->setParent(current_node);
+        neightbor_node->setVisited(true);
+        priority_node_queue_.push(neightbor_node);
+    
         if(neightbor_node->getType() == NodeType::END) {
             algorithmStateChange(AlgorithmState::PATH_FOUND);
             return;
@@ -101,7 +98,7 @@ void AStar::generateStatistics() {
         << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
         << "  Time spent (microseconds): " << result_.time.count() << std::endl
         << "  Path size: " << result_.path.size() << std::endl
-        << "  Distance: " << grid_.endNode_->getDistance() << std::endl;
+        << "  Cost: " << grid_.endNode_->getCost() << std::endl;
 }
 
 int AStar::heuristic(Position a, Position b) {

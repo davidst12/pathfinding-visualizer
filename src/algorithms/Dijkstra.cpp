@@ -1,16 +1,14 @@
 #include<algorithms/Dijkstra.h>
 
-Dijkstra::Dijkstra(Grid& grid)
-    :grid_(grid)
+Dijkstra::Dijkstra(Grid& grid) : IAlgorithm(grid)
 {
-    algorithmStateChange(AlgorithmState::IDLE);
     // El nodo inicial siempre va a ser visitado
     result_.nodes_visited_count = 1;
     result_.nodes_visited_ratio = 0;
 }
 
 void Dijkstra::runAlgorithm() {
-    grid_.startNode_->setDistance(0);
+    grid_.startNode_->setCost(0);
     priority_node_queue_.push(grid_.startNode_);
     algorithmStateChange(AlgorithmState::RUNNING);
     
@@ -51,7 +49,7 @@ void Dijkstra::checkNeightbors(Node* current_node) {
         Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
 
         if(neightbor_node->isVisited() == false && neightbor_node->getType() != NodeType::WALL) {
-            neightbor_node->setDistance(current_node->getDistance() + neightbor_node->getWeight());
+            neightbor_node->setCost(current_node->getCost() + neightbor_node->getWeight());
             neightbor_node->setParent(current_node);
             neightbor_node->setVisited(true);
             priority_node_queue_.push(neightbor_node);
@@ -89,5 +87,5 @@ void Dijkstra::generateStatistics() {
         << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
         << "  Time spent (microseconds): " << result_.time.count() << std::endl
         << "  Path size: " << result_.path.size() << std::endl
-        << "  Distance: " << grid_.endNode_->getDistance() << std::endl;
+        << "  Cost: " << grid_.endNode_->getCost() << std::endl;
 }
