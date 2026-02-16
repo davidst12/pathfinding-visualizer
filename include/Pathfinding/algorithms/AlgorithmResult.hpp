@@ -17,8 +17,8 @@ enum class AlgorithmState {
 struct AlgorithmResult {
     AlgorithmState state = AlgorithmState::IDLE;
     std::vector<Node> path;
-    int nodes_visited_count = 0;
-    float nodes_visited_ratio = 0;
+    int nodes_processed_count = 0;
+    float nodes_processed_ratio = 0;
     std::chrono::microseconds time;
 };
 

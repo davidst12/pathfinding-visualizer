@@ -3,10 +3,12 @@
 
 class AStar : public IAlgorithm {
     public:
-        AStar(Grid& grid);
-        void runAlgorithm() override;
+        AStar();
+        void runAlgorithm(Grid& grid) override;
     private:
         std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priority_node_queue_;
+
+        void resetAlgorithm(Grid& grid) override;
 
         void processNode() override;
         void checkNeightbors(Node* current_node) override;

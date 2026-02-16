@@ -47,7 +47,7 @@ int main() {
    std::vector<std::string> grid =
     { "XXXXXXXXXXXXX"
     , "XOOOOOOOOOOOX"
-    , "XOXOXOOSOOOX"
+    , "XOXOXOOSOOOOX"
     , "XOXOOXXXXXXXX"
     , "XOXOOOWWWWWOX"
     , "XOXOOOWWWWOOX"
@@ -60,26 +60,23 @@ int main() {
 
     Grid g(grid);
     g.printGrid();
+
+    BFS bfs;
+    DFS dfs;
+    Dijkstra dijkstra;
+    AStar a_star;
     
     std::cout << "----------- BFS -----------" << std::endl;
-
-    BFS bfs(g);
-    bfs.runAlgorithm();
+    bfs.runAlgorithm(g);
 
     std::cout << "----------- DFS -----------" << std::endl;
-
-    DFS dfs(g);
-    dfs.runAlgorithm();
+    dfs.runAlgorithm(g);
     
    std::cout << "----------- Dijkstra -----------" << std::endl;
-
-   Dijkstra dijkstra(g);
-   dijkstra.runAlgorithm();
+   dijkstra.runAlgorithm(g);
 
    std::cout << "----------- A* -----------" << std::endl;
-
-   AStar a_star(g);
-   a_star.runAlgorithm();
+   a_star.runAlgorithm(g);
 
     return 0;
 }

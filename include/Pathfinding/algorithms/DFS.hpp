@@ -10,25 +10,16 @@ class DFS : public IAlgorithm
 {
 public:
 
-    DFS(Grid& grid);
+    DFS();
 
-    void runAlgorithm() override;
+    void runAlgorithm(Grid& grid) override;
 
     ~DFS() override = default;
     
-private:
-    //Grid grid_; ///< Referencia al grid donde se realiza la búsqueda.
-    
+private:    
     std::stack<Node*> nodes_to_process_stack_; ///< Pila de nodos a procesar durante el algoritmo.
-    
-    //AlgorithmResult result_; ///< Resultados del algoritmo (camino encontrado, estadísticas, etc.).
-    
-    /*Position neighbors_check_order[4] = {
-        Position(0, -1),  // North
-        Position(0, 1),   // South
-        Position(1, 0),   // East
-        Position(-1, 0),  // West
-    };*/
+
+    void resetAlgorithm(Grid& grid) override;
 
     void processNode() override;
 
