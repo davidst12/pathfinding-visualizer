@@ -1,12 +1,12 @@
-#include<algorithms/AStar.h>
+#include "Pathfinding/algorithms/AStar.hpp"
 
-AStar::AStar(Grid& grid) : IAlgorithm(grid) {
-    result_.nodes_visited_count = 1;
-    result_.nodes_visited_ratio = 0;
-}
+AStar::AStar() : IAlgorithm() {}
 
-void AStar::runAlgorithm() {
-    grid_.startNode_->setCost(0);
+void AStar::runAlgorithm(Grid& grid) {
+
+    resetAlgorithm(grid);
+
+    grid_.startNode_->setCostToEnd(0);
     priority_node_queue_.push(grid_.startNode_);
     algorithmStateChange(AlgorithmState::RUNNING);
     
@@ -28,11 +28,21 @@ void AStar::runAlgorithm() {
     generateStatistics();
 }
 
+void AStar::resetAlgorithm(Grid& grid) {
+    result_.nodes_processed_count = 1;
+    result_.nodes_processed_ratio = 0;
+
+    grid_ = grid;
+    grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
+    grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
+
+    priority_node_queue_ = std::priority_queue<Node*, std::vector<Node*>, CompareNodes>();
+}
+
 void AStar::processNode() {
     Node* current_node = priority_node_queue_.top();
-    current_node->setVisited(true);
-    current_node->setProcessed(true);
-    result_.nodes_visited_count += 1;
+    current_node->setState(NodeState::PROCESSED);
+    result_.nodes_processed_count += 1;
 
     if(current_node->getType() == NodeType::END) {
         algorithmStateChange(AlgorithmState::PATH_FOUND);
@@ -48,17 +58,17 @@ void AStar::checkNeightbors(Node* current_node) {
         Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
 
         if(neightbor_node->getType() == NodeType::WALL) continue;
-        else if(neightbor_node->isVisited()) {
+        else if(neightbor_node->getState() != NodeState::UNDISCOVERED) {
             int tentative_cost = current_node->getPathWeight() + neightbor_node->getWeight();
             if(tentative_cost >= neightbor_node->getPathWeight()) continue;
         }
 
         neightbor_node->setPathWeight(current_node->getPathWeight() + neightbor_node->getWeight());
-        neightbor_node->setCost(neightbor_node->getPathWeight()
+        neightbor_node->setCostToEnd(neightbor_node->getPathWeight()
             + heuristic(neightbor_node->getPosition(), grid_.endNode_->getPosition())
         );
         neightbor_node->setParent(current_node);
-        neightbor_node->setVisited(true);
+        neightbor_node->setState(NodeState::DISCOVERED);
         priority_node_queue_.push(neightbor_node);
     
         if(neightbor_node->getType() == NodeType::END) {
@@ -91,14 +101,14 @@ void AStar::algorithmStateChange(AlgorithmState state) {
 }
 
 void AStar::generateStatistics() {
-    result_.nodes_visited_ratio = 100 * result_.nodes_visited_count / grid_.getEmptyNodesCount();
+    result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
 
     std::cout << "Algorithm statistics: \n"
-        << "  Nodes visited: " << result_.nodes_visited_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
-        << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
+        << "  Nodes visited: " << result_.nodes_processed_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
+        << "  Nodes visited ratio: " << result_.nodes_processed_ratio << "%" << std::endl
         << "  Time spent (microseconds): " << result_.time.count() << std::endl
         << "  Path size: " << result_.path.size() << std::endl
-        << "  Cost: " << grid_.endNode_->getCost() << std::endl;
+        << "  Cost: " << grid_.endNode_->getPathWeight() << std::endl;
 }
 
 int AStar::heuristic(Position a, Position b) {

@@ -1,13 +1,11 @@
-#include "DFS.h"
+#include "Pathfinding/algorithms/DFS.hpp"
 
-DFS::DFS(Grid& grid) : IAlgorithm(grid)
-{
-    // El nodo inicial siempre va a ser visitado
-    result_.nodes_visited_count = 1;
-    result_.nodes_visited_ratio = 0;
-}
+DFS::DFS() : IAlgorithm() {}
 
-void DFS::runAlgorithm() {
+void DFS::runAlgorithm(Grid& grid) {
+
+    resetAlgorithm(grid);
+
     nodes_to_process_stack_.push(grid_.startNode_);
     algorithmStateChange(AlgorithmState::RUNNING);
     
@@ -29,10 +27,21 @@ void DFS::runAlgorithm() {
     generateStatistics();
 }
 
+void DFS::resetAlgorithm(Grid& grid) {
+    result_.nodes_processed_count = 1;
+    result_.nodes_processed_ratio = 0;
+
+    grid_ = grid;
+    grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
+    grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
+
+    nodes_to_process_stack_ = std::stack<Node*>();
+}
+
 void DFS::processNode() {
     Node* current_node = nodes_to_process_stack_.top();
-    current_node->setVisited(true);
-    result_.nodes_visited_count += 1;
+    current_node->setState(NodeState::PROCESSED);
+    result_.nodes_processed_count += 1;
 
     if(current_node->getType() == NodeType::END) {
         algorithmStateChange(AlgorithmState::PATH_FOUND);
@@ -47,10 +56,11 @@ void DFS::checkNeightbors(Node* current_node) {
         Position neightbor_position = current_node->getPosition() + neighbors_check_order[index];
         Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
 
-        if(neightbor_node->isVisited() == false && neightbor_node->getType() != NodeType::WALL) {
+        if(neightbor_node->getState() == NodeState::UNDISCOVERED && neightbor_node->getType() != NodeType::WALL) {
             neightbor_node->setParent(current_node);
-            neightbor_node->setVisited(true);
+            neightbor_node->setState(NodeState::DISCOVERED);
             nodes_to_process_stack_.push(neightbor_node);
+            neightbor_node->setPathWeight(current_node->getPathWeight() + neightbor_node->getWeight());
         }
     }
 }
@@ -78,11 +88,12 @@ void DFS::algorithmStateChange(AlgorithmState state) {
 }
 
 void DFS::generateStatistics() {
-    result_.nodes_visited_ratio = 100 * result_.nodes_visited_count / grid_.getEmptyNodesCount();
+    result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
 
     std::cout << "Algorithm statistics: \n"
-        << "  Nodes visited: " << result_.nodes_visited_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
-        << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
+        << "  Nodes visited: " << result_.nodes_processed_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
+        << "  Nodes visited ratio: " << result_.nodes_processed_ratio << "%" << std::endl
         << "  Time spent (microseconds): " << result_.time.count() << std::endl
-        << "  Path size: " << result_.path.size() << std::endl;
+        << "  Path size: " << result_.path.size() << std::endl
+        << "  Cost: " << grid_.endNode_->getPathWeight() << std::endl;
 }

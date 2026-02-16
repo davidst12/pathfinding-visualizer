@@ -1,31 +1,25 @@
 cmake_minimum_required(VERSION 3.14)
-project(PathfindingVisualizer)
+project(PathfindingVisualizer VERSION 1.0 LANGUAGES CXX)
+
+##### Compilation #####
 
 set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Incluye las rutas donde están los archivos .h
-include_directories(${PROJECT_SOURCE_DIR}/src)
+set(HEADER_DIR ${PROJECT_SOURCE_DIR}/include)
+set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
-# Los archivos fuente del proyecto
-set(SOURCES
-    src/main.cpp
-    src/grid/Grid.cpp
-    src/grid/node/Node.cpp
-    src/algorithms/BFS.cpp
-    src/algorithms/DFS.cpp
-    src/algorithms/Dijkstra.cpp
-    src/algorithms/AStar.cpp
-)
+file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
 
 add_executable(Pathfinding ${SOURCES})
 
-# Ejecutable principal
-# add_executable(pathfinding_visualizer src/main.cpp)
+target_include_directories(Pathfinding PRIVATE ${HEADER_DIR})
 
-# Tests
+
+##### Tests #####
+
 add_executable(unit_tests
     tests/test_main.cpp
 )

@@ -1,46 +1,21 @@
-#include "Node.h"
+#include "Pathfinding/core/Node.hpp"
 
 #include<iostream>
 
 Node::Node(Position position, NodeType type)
     : position_(position)
     , type_(type)
-    , visited_(false)
+    , state_(NodeState::UNDISCOVERED)
     , parent_(nullptr)
-    , cost_(INT_MAX) 
-{
-    switch (type_)
-    {
-    case NodeType::EMPTY:
-        weight_ = 1;
-        break;
-    case NodeType::ROAD:
-        weight_ = 1;
-        break;
-    case NodeType::GRASS:
-        weight_ = 3;
-        break;
-    case NodeType::WATER:
-        weight_ = 5;
-        break;
-    case NodeType::START:
-        weight_ = 0;
-        break;
-    case NodeType::END:
-        weight_ = 0;
-        break;
-    default:
-        weight_ = 100;
-        break;
-    }
-    path_weight_ = 0;
-}
+    , cost_to_end_(INT_MAX)
+    ,path_weight_(0),
+    weight_(weightFromNodeType(type)) {}
 
-bool Node::isVisited() {
-    return visited_;
+NodeState Node::getState() {
+    return state_;
 }
-void Node::setVisited(bool v) {
-    visited_ = v;
+void Node::setState(NodeState new_state) {
+    state_ = new_state;
 }
 
 void Node::setPosition(Position position) {
@@ -69,7 +44,7 @@ char Node::getChar() {
     switch (type_)
     {
     case NodeType::EMPTY:
-        if(visited_) return '#';
+        if(state_ == NodeState::PROCESSED) return '#';
         else return '-';
     case NodeType::WALL:
         return 'X';
@@ -92,11 +67,11 @@ void Node::printNodeInformation() {
     if(parent_ == nullptr) {
         std::cout << "Node (" << position_.x << " , "
         << position_.y << ") , parent (null) , " 
-        << "visited " << visited_ << std::endl;
+        << "processed " << (state_ == NodeState::PROCESSED) << std::endl;
     }else {
         std::cout << "Node (" << position_.x << " , "
         << position_.y << ") , parent (" << parent_->getPosition().x << " , "
         << parent_->getPosition().y << ") , "
-        << "visited " << visited_ << std::endl;
+        << "processed " << (state_ == NodeState::PROCESSED) << std::endl;
     }
 }

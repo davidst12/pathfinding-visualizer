@@ -1,12 +1,14 @@
-#include "algorithms/IAlgorithm.h"
+#include "Pathfinding/algorithms/IAlgorithm.hpp"
 #include <queue>
 
 class Dijkstra : public IAlgorithm {
     public:
-        Dijkstra(Grid& grid);
-        void runAlgorithm() override;
+        Dijkstra();
+        void runAlgorithm(Grid& grid) override;
     private:
         std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priority_node_queue_;
+
+        void resetAlgorithm(Grid& grid) override;
 
         void processNode() override;
         void checkNeightbors(Node* current_node) override;

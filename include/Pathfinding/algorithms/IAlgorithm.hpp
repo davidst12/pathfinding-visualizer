@@ -1,21 +1,18 @@
 #pragma once
 
-#include "grid/Grid.h"
-#include "common/AlgorithmResult.h"
-#include "common/CompareNodes.h"
+#include "Pathfinding/core/Grid.hpp"
+#include "Pathfinding/algorithms/AlgorithmResult.hpp"
+#include "Pathfinding/algorithms/CompareNodes.hpp"
 #include <queue>
 
 class IAlgorithm {
     public:
-        IAlgorithm(Grid& grid) {
-            grid_ = grid;
-            grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
-            grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
-        };
-        virtual void runAlgorithm() = 0;
+        IAlgorithm() {};
+        virtual void runAlgorithm(Grid& grid) = 0;
+
+        virtual ~IAlgorithm() = default;
     protected:
         Grid grid_;
-        std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priority_node_queue_;
         AlgorithmResult result_;
 
         Position neighbors_check_order[4] = {
@@ -24,6 +21,8 @@ class IAlgorithm {
             Position(1, 0),   // East
             Position(-1, 0),  // West
         };
+
+        virtual void resetAlgorithm(Grid& grid) = 0;
 
         virtual void processNode() = 0;
         virtual void checkNeightbors(Node* current_node) = 0;

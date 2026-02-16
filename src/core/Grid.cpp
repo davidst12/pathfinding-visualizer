@@ -1,7 +1,6 @@
 #include <iostream>
 
-#include "Grid.h"
-#include "node/NodeType.h"
+#include "Pathfinding/core/Grid.hpp"
 
 Grid::Grid(std::vector<std::string> grid)
 {

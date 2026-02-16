@@ -1,10 +1,10 @@
 #pragma once
 
-#include "grid/node/Node.h"
+#include "Pathfinding/core/Node.hpp"
 
 class CompareNodes {
     public:
         bool operator()(Node* a, Node* b) {
-            return a->getCost() > b->getCost();
+            return a->getCostToEnd() > b->getCostToEnd();
         }
 };
