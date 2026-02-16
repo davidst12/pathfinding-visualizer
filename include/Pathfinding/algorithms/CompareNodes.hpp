@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grid/node/Node.h"
+#include "Pathfinding/core/Node.hpp"
 
 class CompareNodes {
     public:

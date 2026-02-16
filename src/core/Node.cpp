@@ -1,4 +1,4 @@
-#include "Node.h"
+#include "Pathfinding/core/Node.hpp"
 
 #include<iostream>
 

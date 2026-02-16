@@ -2,11 +2,11 @@
 #include <string>
 #include <vector>
 
-#include "grid/Grid.h"
-#include "algorithms/BFS.h"
-#include "algorithms/DFS.h"
-#include "algorithms/Dijkstra.h"
-#include "algorithms/AStar.h"
+#include "Pathfinding/core/Grid.hpp"
+#include "Pathfinding/algorithms/BFS.hpp"
+#include "Pathfinding/algorithms/DFS.hpp"
+#include "Pathfinding/algorithms/Dijkstra.hpp"
+#include "Pathfinding/algorithms/AStar.hpp"
 
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;

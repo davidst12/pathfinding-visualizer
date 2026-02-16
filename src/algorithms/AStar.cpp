@@ -1,4 +1,4 @@
-#include<algorithms/AStar.h>
+#include "Pathfinding/algorithms/AStar.hpp"
 
 AStar::AStar(Grid& grid) : IAlgorithm(grid) {
     result_.nodes_visited_count = 1;

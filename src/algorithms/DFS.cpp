@@ -1,4 +1,4 @@
-#include "DFS.h"
+#include "Pathfinding/algorithms/DFS.hpp"
 
 DFS::DFS(Grid& grid) : IAlgorithm(grid)
 {

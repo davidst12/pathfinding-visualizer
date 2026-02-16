@@ -1,8 +1,8 @@
 #pragma once
 
-#include "grid/Grid.h"
-#include "common/AlgorithmResult.h"
-#include "common/CompareNodes.h"
+#include "Pathfinding/core/Grid.hpp"
+#include "Pathfinding/algorithms/AlgorithmResult.hpp"
+#include "Pathfinding/algorithms/CompareNodes.hpp"
 #include <queue>
 
 class IAlgorithm {
@@ -13,6 +13,8 @@ class IAlgorithm {
             grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
         };
         virtual void runAlgorithm() = 0;
+
+        virtual ~IAlgorithm() = default;
     protected:
         Grid grid_;
         std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priority_node_queue_;

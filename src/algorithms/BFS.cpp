@@ -1,4 +1,4 @@
-#include "BFS.h"
+#include "Pathfinding/algorithms/BFS.hpp"
 
 BFS::BFS(Grid& grid) : IAlgorithm(grid)
 {

@@ -1,4 +1,4 @@
-#include<algorithms/Dijkstra.h>
+#include "Pathfinding/algorithms/Dijkstra.hpp"
 
 Dijkstra::Dijkstra(Grid& grid) : IAlgorithm(grid)
 {
