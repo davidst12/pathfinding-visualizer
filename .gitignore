@@ -1,4 +1,5 @@
 /build
+/coverage_results
 *.o
 *.exe
 *.out

@@ -12,7 +12,7 @@ public:
 
     DFS();
 
-    void runAlgorithm(Grid& grid) override;
+    AlgorithmResult runAlgorithm(Grid& grid) override;
 
     ~DFS() override = default;
     

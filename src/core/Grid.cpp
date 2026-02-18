@@ -62,36 +62,39 @@ Grid::Grid(std::vector<std::string> grid)
     endNode_ = &grid_[endPosition.y][endPosition.x];
 }
 
-void Grid::printGrid() {
-    std::cout << std::endl;
+std::string Grid::toString() {
+    std::string grid_string = "";
+
     for(int columnIndex = 0; columnIndex<grid_.size(); columnIndex++) {
         for(int rowIndex = 0; rowIndex<grid_[columnIndex].size(); rowIndex++) {
-            std::cout << grid_[columnIndex][rowIndex].getChar();
+            grid_string += grid_[columnIndex][rowIndex].getChar();
         }
-        std::cout << std::endl;
+        grid_string += "\n";
     }
-    std::cout << std::endl;
+
+    return grid_string;
 }
 
-void Grid::printGridAndPath(std::vector<Node> path) {
-    std::cout << std::endl;
+std::string Grid::toStringWithPath(std::vector<Node> path) {
+    std::string grid_string = "";
+
     for(int columnIndex = 0; columnIndex<grid_.size(); columnIndex++) {
         for(int rowIndex = 0; rowIndex<grid_[columnIndex].size(); rowIndex++) {
             Node n = grid_[columnIndex][rowIndex];
             bool found = false;
             for(int i=0; i<path.size(); i++) {
-                if(n.getPosition() == path[i].getPosition() && path[i].getType() != NodeType::END) {
-                    std::cout << "+";
+                if(n.getPosition() == path[i].getPosition() && (path[i].getType() != NodeType::END && path[i].getType() != NodeType::START)) {
+                    grid_string += "+";
                     found = true;
                 }
             }
             if(found == false) {
-                std::cout << grid_[columnIndex][rowIndex].getChar();
+                grid_string += grid_[columnIndex][rowIndex].getChar();
             }
         }
-        std::cout << std::endl;
+        grid_string += "\n";
     }
-    std::cout << std::endl;
+    return grid_string;
 }
 
 Node* Grid::getNodeFromPosition(Position pos) {

@@ -59,7 +59,7 @@ int main() {
     };
 
     Grid g(grid);
-    g.printGrid();
+    std::cout << g.toString() << std::endl;
 
     BFS bfs;
     DFS dfs;
@@ -67,16 +67,20 @@ int main() {
     AStar a_star;
     
     std::cout << "----------- BFS -----------" << std::endl;
-    bfs.runAlgorithm(g);
+    AlgorithmResult bfs_result = bfs.runAlgorithm(g);
+    std::cout << bfs_result.toString() << std::endl;
 
     std::cout << "----------- DFS -----------" << std::endl;
-    dfs.runAlgorithm(g);
+    AlgorithmResult dfs_result = dfs.runAlgorithm(g);
+    std::cout << dfs_result.toString() << std::endl;
     
    std::cout << "----------- Dijkstra -----------" << std::endl;
-   dijkstra.runAlgorithm(g);
+   AlgorithmResult dijkstra_result = dijkstra.runAlgorithm(g);
+    std::cout << dijkstra_result.toString() << std::endl;
 
    std::cout << "----------- A* -----------" << std::endl;
-   a_star.runAlgorithm(g);
+   AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    std::cout << a_star_result.toString() << std::endl;
 
     return 0;
 }

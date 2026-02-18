@@ -1,13 +1,8 @@
 #include "Pathfinding/algorithms/Dijkstra.hpp"
 
-Dijkstra::Dijkstra() : IAlgorithm()
-{
-    // El nodo inicial siempre va a ser visitado
-    result_.nodes_processed_count = 1;
-    result_.nodes_processed_ratio = 0;
-}
+Dijkstra::Dijkstra() : IAlgorithm() {}
 
-void Dijkstra::runAlgorithm(Grid& grid) {
+AlgorithmResult Dijkstra::runAlgorithm(Grid& grid) {
 
     resetAlgorithm(grid);
 
@@ -26,15 +21,17 @@ void Dijkstra::runAlgorithm(Grid& grid) {
 
     if(result_.state == AlgorithmState::PATH_FOUND) {
         result_.path = getPath();
-        grid_.printGridAndPath(result_.path);
+        std::cout << grid_.toStringWithPath(result_.path);
     } else {
         algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
     }
     generateStatistics();
+
+    return result_;
 }
 
 void Dijkstra::resetAlgorithm(Grid& grid) {
-    result_.nodes_processed_count = 1;
+    result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
 
     grid_ = grid;
@@ -64,7 +61,7 @@ void Dijkstra::checkNeightbors(Node* current_node) {
 
         if(neightbor_node->getState() == NodeState::UNDISCOVERED && neightbor_node->getType() != NodeType::WALL) {
             neightbor_node->setPathWeight(current_node->getPathWeight() + neightbor_node->getWeight());
-            neightbor_node->setCostToEnd(current_node->getPathWeight());
+            neightbor_node->setCostToEnd(neightbor_node->getPathWeight());
             neightbor_node->setParent(current_node);
             neightbor_node->setState(NodeState::DISCOVERED);
             priority_node_queue_.push(neightbor_node);
@@ -73,16 +70,16 @@ void Dijkstra::checkNeightbors(Node* current_node) {
 }
 
 std::vector<Node> Dijkstra::getPath() {
+    if(result_.state != AlgorithmState::PATH_FOUND) {
+        return std::vector<Node>();
+    }
     std::vector<Node> path;
     Node* n = grid_.endNode_;
     while (true)
     {
-        if(n->getParent() != nullptr) {
-            path.push_back(*n);
-            n = n->getParent();
-        } else {
-            break;
-        }
+        path.push_back(*n);
+        n = n->getParent();
+        if(n == nullptr) break;
     }
     return path;
 }
@@ -96,11 +93,5 @@ void Dijkstra::algorithmStateChange(AlgorithmState state) {
 
 void Dijkstra::generateStatistics() {
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
-
-    std::cout << "Algorithm statistics: \n"
-        << "  Nodes visited: " << result_.nodes_processed_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
-        << "  Nodes visited ratio: " << result_.nodes_processed_ratio << "%" << std::endl
-        << "  Time spent (microseconds): " << result_.time.count() << std::endl
-        << "  Path size: " << result_.path.size() << std::endl
-        << "  Cost: " << grid_.endNode_->getPathWeight() << std::endl;
+    result_.grid_resolved = &grid_;
 }

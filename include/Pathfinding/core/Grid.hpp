@@ -28,9 +28,9 @@ public:
     Node* endNode_;
     GridInfo grid_info_;
 
-    void printGrid();
+    std::string toString();
 
-    void printGridAndPath(std::vector<Node> path);
+    std::string toStringWithPath(std::vector<Node> path);
 
     Node* getNodeFromPosition(Position pos);
 

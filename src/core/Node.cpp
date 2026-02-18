@@ -8,8 +8,8 @@ Node::Node(Position position, NodeType type)
     , state_(NodeState::UNDISCOVERED)
     , parent_(nullptr)
     , cost_to_end_(INT_MAX)
-    ,path_weight_(0),
-    weight_(weightFromNodeType(type)) {}
+    , path_weight_(0)
+    , weight_(weightFromNodeType(type)) {}
 
 NodeState Node::getState() {
     return state_;
@@ -35,43 +35,21 @@ void Node::setParent(Node* parent) {
 
 void Node::setType(NodeType type) {
     type_ = type;
+    weight_ = weightFromNodeType(type);
 }
 NodeType Node::getType() {
     return type_;
 }
 
 char Node::getChar() {
-    switch (type_)
-    {
-    case NodeType::EMPTY:
-        if(state_ == NodeState::PROCESSED) return '#';
-        else return '-';
-    case NodeType::WALL:
-        return 'X';
-    case NodeType::START:
-        return 'S';
-    case NodeType::END:
-        return 'E';
-    case NodeType::ROAD:
-        return 'R';
-    case NodeType::GRASS:
-        return 'G';    
-    case NodeType::WATER:
-        return 'W';
-    default:
-        break;
-    }
+    return charFromNodeType(type_);
 }
 
-void Node::printNodeInformation() {
-    if(parent_ == nullptr) {
-        std::cout << "Node (" << position_.x << " , "
-        << position_.y << ") , parent (null) , " 
-        << "processed " << (state_ == NodeState::PROCESSED) << std::endl;
-    }else {
-        std::cout << "Node (" << position_.x << " , "
-        << position_.y << ") , parent (" << parent_->getPosition().x << " , "
-        << parent_->getPosition().y << ") , "
-        << "processed " << (state_ == NodeState::PROCESSED) << std::endl;
-    }
+std::string Node::toString() {
+    std::string node_string = "";
+    node_string += "Node " + position_.to_string() + "\n";
+    node_string += "  Parent " + (parent_ != nullptr ? parent_->getPosition().to_string() : "null");
+    node_string += "  State " + std::to_string(static_cast<int>(state_));
+
+    return node_string;
 }

@@ -1,29 +1,32 @@
 cmake_minimum_required(VERSION 3.14)
-project(PathfindingVisualizer VERSION 1.0 LANGUAGES CXX)
+project(PathfindingVisualizer VERSION 1.0 LANGUAGES C CXX)
 
 ##### Compilation #####
 
 set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HEADER_DIR ${PROJECT_SOURCE_DIR}/include)
-set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Activando instrumentación para Coverage...")
+    # Usamos las flags nativas de LLVM/Clang para Apple Silicon
+    add_compile_options("-fprofile-instr-generate" "-fcoverage-mapping" "-O0" "-g")
+    add_link_options("-fprofile-instr-generate" "-fcoverage-mapping")
+endif()
 
-file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
+# Recogemos todos los .cpp de la lógica (excepto el main.cpp)
+file(GLOB_RECURSE SOURCES "src/core/*.cpp" "src/algorithms/*.cpp")
 
-add_executable(Pathfinding ${SOURCES})
+# Creamos la librería
+add_library(PathfindingLib ${SOURCES})
+target_include_directories(PathfindingLib PUBLIC include)
 
-target_include_directories(Pathfinding PRIVATE ${HEADER_DIR})
+# App principal
+add_executable(PathfindingApp src/main.cpp)
+target_link_libraries(PathfindingApp PathfindingLib)
 
 
 ##### Tests #####
 
-add_executable(unit_tests
-    tests/test_main.cpp
-)
-
-target_include_directories(unit_tests PRIVATE tests)
 enable_testing()
-add_test(NAME unit_tests COMMAND unit_tests)
+add_subdirectory(tests)

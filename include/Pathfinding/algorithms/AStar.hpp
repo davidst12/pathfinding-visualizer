@@ -4,7 +4,7 @@
 class AStar : public IAlgorithm {
     public:
         AStar();
-        void runAlgorithm(Grid& grid) override;
+        AlgorithmResult runAlgorithm(Grid& grid) override;
     private:
         std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priority_node_queue_;
 
