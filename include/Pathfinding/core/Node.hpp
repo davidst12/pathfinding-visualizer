@@ -26,7 +26,21 @@ constexpr int weightFromNodeType(NodeType type) {
         case NodeType::ROAD:  return 1;
         case NodeType::GRASS: return 3;
         case NodeType::WATER: return 5;
+        case NodeType::WALL: return 100;
         default:              return 100;
+    }
+}
+
+constexpr char charFromNodeType(NodeType type) {
+    switch (type) {
+        case NodeType::START: return 'S';
+        case NodeType::END:   return 'E';
+        case NodeType::EMPTY: return '-';
+        case NodeType::ROAD:  return 'R';
+        case NodeType::GRASS: return 'G';
+        case NodeType::WATER: return 'W';
+        case NodeType::WALL:  return 'X';
+        default:              return '-';
     }
 }
 
@@ -54,7 +68,7 @@ public:
     void setCostToEnd(int cost) { cost_to_end_ = cost; }
     void setPathWeight(int path_weight) { path_weight_ = path_weight; }
 
-    void printNodeInformation();
+    std::string toString();
 
 private:
     Position  position_;

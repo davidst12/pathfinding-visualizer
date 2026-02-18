@@ -2,7 +2,7 @@
 
 BFS::BFS() : IAlgorithm() {}
 
-void BFS::runAlgorithm(Grid& grid) {
+AlgorithmResult BFS::runAlgorithm(Grid& grid) {
 
     resetAlgorithm(grid);
 
@@ -20,15 +20,17 @@ void BFS::runAlgorithm(Grid& grid) {
 
     if(result_.state == AlgorithmState::PATH_FOUND) {
         result_.path = getPath();
-        grid_.printGridAndPath(result_.path);
+        std::cout << grid_.toStringWithPath(result_.path);
     } else {
         algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
     }
     generateStatistics();
+
+    return result_;
 }
 
 void BFS::resetAlgorithm(Grid& grid) {
-    result_.nodes_processed_count = 1;
+    result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
 
     grid_ = grid;
@@ -66,16 +68,16 @@ void BFS::checkNeightbors(Node* current_node) {
 }
 
 std::vector<Node> BFS::getPath() {
+    if(result_.state != AlgorithmState::PATH_FOUND) {
+        return std::vector<Node>();
+    }
     std::vector<Node> path;
     Node* n = grid_.endNode_;
     while (true)
     {
-        if(n->getParent() != nullptr) {
-            path.push_back(*n);
-            n = n->getParent();
-        } else {
-            break;
-        }
+        path.push_back(*n);
+        n = n->getParent();
+        if(n == nullptr) break;
     }
     return path;
 }
@@ -89,11 +91,5 @@ void BFS::algorithmStateChange(AlgorithmState state) {
 
 void BFS::generateStatistics() {
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
-
-    std::cout << "Algorithm statistics: \n"
-        << "  Nodes visited: " << result_.nodes_processed_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
-        << "  Nodes visited ratio: " << result_.nodes_processed_ratio << "%" << std::endl
-        << "  Time spent (microseconds): " << result_.time.count() << std::endl
-        << "  Path size: " << result_.path.size() << std::endl
-        << "  Cost: " << grid_.endNode_->getPathWeight() << std::endl;
+    result_.grid_resolved = &grid_;
 }

@@ -8,7 +8,7 @@
 class IAlgorithm {
     public:
         IAlgorithm() {};
-        virtual void runAlgorithm(Grid& grid) = 0;
+        virtual AlgorithmResult runAlgorithm(Grid& grid) = 0;
 
         virtual ~IAlgorithm() = default;
     protected:

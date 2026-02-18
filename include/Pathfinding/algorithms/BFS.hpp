@@ -12,7 +12,7 @@ public:
 
     BFS();
 
-    void runAlgorithm(Grid& grid) override;
+    AlgorithmResult runAlgorithm(Grid& grid) override;
 
     ~BFS() override = default;
     
