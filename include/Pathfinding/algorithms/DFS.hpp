@@ -13,6 +13,8 @@ public:
     DFS();
 
     AlgorithmResult runAlgorithm(Grid& grid) override;
+    AlgorithmResult runStepAlgorithm() override;
+    void setGrid(Grid& grid) override;
 
     ~DFS() override = default;
     

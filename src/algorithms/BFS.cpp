@@ -29,9 +29,33 @@ AlgorithmResult BFS::runAlgorithm(Grid& grid) {
     return result_;
 }
 
+AlgorithmResult BFS::runStepAlgorithm() {
+
+    if(result_.state == AlgorithmState::IDLE) {
+        nodes_to_process_queue_.push(grid_.startNode_);
+        algorithmStateChange(AlgorithmState::RUNNING);
+    }
+    if(!nodes_to_process_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+        processNode();
+    }
+    if(result_.state == AlgorithmState::PATH_FOUND) {
+        result_.path = getPath();
+    } else if(nodes_to_process_queue_.empty()) {
+        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+    }
+    generateStatistics();
+
+    return result_;
+}
+
+void BFS::setGrid(Grid& grid) {
+    resetAlgorithm(grid);
+}
+
 void BFS::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
+    result_.path = std::vector<Node>();
 
     grid_ = grid;
     grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());

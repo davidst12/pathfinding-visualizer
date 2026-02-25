@@ -10,6 +10,9 @@ class IAlgorithm {
         IAlgorithm() {};
         virtual AlgorithmResult runAlgorithm(Grid& grid) = 0;
 
+        virtual AlgorithmResult runStepAlgorithm() = 0;
+        virtual void setGrid(Grid& grid) = 0;
+
         virtual ~IAlgorithm() = default;
     protected:
         Grid grid_;

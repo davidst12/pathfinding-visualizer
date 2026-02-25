@@ -14,16 +14,30 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_link_options("-fprofile-instr-generate" "-fcoverage-mapping")
 endif()
 
+##### External libraries #####
+
+find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+
 # Recogemos todos los .cpp de la lógica (excepto el main.cpp)
-file(GLOB_RECURSE SOURCES "src/core/*.cpp" "src/algorithms/*.cpp")
+file(GLOB_RECURSE SOURCES 
+    "src/core/*.cpp"
+    "src/algorithms/*.cpp"
+    "src/visualization/*.cpp"
+    "src/app/*.cpp"
+    "src/player/*.cpp")
 
 # Creamos la librería
 add_library(PathfindingLib ${SOURCES})
 target_include_directories(PathfindingLib PUBLIC include)
+target_include_directories(PathfindingLib PRIVATE /opt/homebrew/include)
 
 # App principal
 add_executable(PathfindingApp src/main.cpp)
-target_link_libraries(PathfindingApp PathfindingLib)
+target_link_libraries(PathfindingApp 
+    PathfindingLib
+    SFML::Graphics 
+    SFML::Window 
+    SFML::System)
 
 
 ##### Tests #####

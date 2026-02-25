@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "Pathfinding/core/Node.hpp"
+#include "Pathfinding/core/Grid.hpp"
 
 enum class AlgorithmState {
     IDLE,

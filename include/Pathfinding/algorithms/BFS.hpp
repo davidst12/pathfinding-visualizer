@@ -13,6 +13,8 @@ public:
     BFS();
 
     AlgorithmResult runAlgorithm(Grid& grid) override;
+    AlgorithmResult runStepAlgorithm() override;
+    void setGrid(Grid& grid) override;
 
     ~BFS() override = default;
     
