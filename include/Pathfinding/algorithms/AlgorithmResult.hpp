@@ -10,6 +10,7 @@
 
 enum class AlgorithmState {
     IDLE,
+    READY,
     RUNNING,
     PATH_FOUND,
     PATH_NOT_FOUND
@@ -22,6 +23,9 @@ inline std::string state_to_string(AlgorithmState state)
    {
         case AlgorithmState::IDLE:
             enum_as_string = "IDLE";
+            break;
+        case AlgorithmState::READY:
+            enum_as_string = "READY";
             break;
         case AlgorithmState::RUNNING:
             enum_as_string = "RUNNING";

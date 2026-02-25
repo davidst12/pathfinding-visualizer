@@ -125,15 +125,16 @@ AppStateEvent Player::handleSelectExecutionMenuState() {
 AppStateEvent Player::handlePlayingState()
 {
     ScreenResult screen_result;
+
+    algorithm->prepare(*grid.get());
+
     if (executionMode == AlgorithmExecutionMode::Instant) {
-        AlgorithmResult result = algorithm->runAlgorithm(*grid.get());
+        AlgorithmResult result = algorithm->solve();
         screen_result = visualization.displayPlayingScreen(result);
     } else if (executionMode == AlgorithmExecutionMode::StepByStep) {
-        algorithm->setGrid(*grid.get());
         AlgorithmResult result;
-        screen_result;
         do {
-            result = algorithm->runStepAlgorithm();
+            result = algorithm->step();
             screen_result = visualization.displayPlayingScreen(result);
         } while(screen_result.state_event == AppStateEvent::Continue && result.state == AlgorithmState::RUNNING);
     }

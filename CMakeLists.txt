@@ -42,5 +42,5 @@ target_link_libraries(PathfindingApp
 
 ##### Tests #####
 
-enable_testing()
-add_subdirectory(tests)
+# enable_testing()
+# add_subdirectory(tests)

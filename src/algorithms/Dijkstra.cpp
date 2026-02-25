@@ -2,12 +2,18 @@
 
 Dijkstra::Dijkstra() : IAlgorithm() {}
 
-AlgorithmResult Dijkstra::runAlgorithm(Grid& grid) {
-
+bool Dijkstra::prepare(Grid& grid) {
     resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::READY);
 
-    grid_.startNode_->setPathWeight(0);
-    priority_node_queue_.push(grid_.startNode_);
+    return true;
+}
+
+AlgorithmResult Dijkstra::solve() {
+
+    if(result_.state == AlgorithmState::IDLE) {
+        return result_;
+    }
     algorithmStateChange(AlgorithmState::RUNNING);
     
     auto start = std::chrono::high_resolution_clock::now();
@@ -30,12 +36,12 @@ AlgorithmResult Dijkstra::runAlgorithm(Grid& grid) {
     return result_;
 }
 
-AlgorithmResult Dijkstra::runStepAlgorithm() {
+AlgorithmResult Dijkstra::step() {
 
     if(result_.state == AlgorithmState::IDLE) {
-        priority_node_queue_.push(grid_.startNode_);
-        algorithmStateChange(AlgorithmState::RUNNING);
+        return result_;
     }
+    algorithmStateChange(AlgorithmState::RUNNING);
     if(!priority_node_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
         processNode();
     }
@@ -49,10 +55,6 @@ AlgorithmResult Dijkstra::runStepAlgorithm() {
     return result_;
 }
 
-void Dijkstra::setGrid(Grid& grid) {
-    resetAlgorithm(grid);
-}
-
 void Dijkstra::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
@@ -61,8 +63,10 @@ void Dijkstra::resetAlgorithm(Grid& grid) {
     grid_ = grid;
     grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
     grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
+    grid_.startNode_->setPathWeight(0);
 
     priority_node_queue_ = std::priority_queue<Node*, std::vector<Node*>, CompareNodes>();
+    priority_node_queue_.push(grid_.startNode_);
 }
 
 void Dijkstra::processNode() {

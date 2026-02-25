@@ -1,12 +1,20 @@
 #include "Pathfinding/algorithms/BFS.hpp"
 
-BFS::BFS() : IAlgorithm() {}
+BFS::BFS() : IAlgorithm() {
+    algorithmStateChange(AlgorithmState::IDLE);
+}
 
-AlgorithmResult BFS::runAlgorithm(Grid& grid) {
-
+bool BFS::prepare(Grid& grid) {
     resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::READY);
 
-    nodes_to_process_queue_.push(grid_.startNode_);
+    return true;
+}
+
+AlgorithmResult BFS::solve() {
+    if(result_.state == AlgorithmState::IDLE) {
+        return result_;
+    }
     algorithmStateChange(AlgorithmState::RUNNING);
     
     auto start = std::chrono::high_resolution_clock::now();
@@ -29,12 +37,12 @@ AlgorithmResult BFS::runAlgorithm(Grid& grid) {
     return result_;
 }
 
-AlgorithmResult BFS::runStepAlgorithm() {
-
+AlgorithmResult BFS::step() {
     if(result_.state == AlgorithmState::IDLE) {
-        nodes_to_process_queue_.push(grid_.startNode_);
-        algorithmStateChange(AlgorithmState::RUNNING);
+        return result_;
     }
+    algorithmStateChange(AlgorithmState::RUNNING);
+
     if(!nodes_to_process_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
         processNode();
     }
@@ -48,10 +56,6 @@ AlgorithmResult BFS::runStepAlgorithm() {
     return result_;
 }
 
-void BFS::setGrid(Grid& grid) {
-    resetAlgorithm(grid);
-}
-
 void BFS::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
@@ -62,6 +66,7 @@ void BFS::resetAlgorithm(Grid& grid) {
     grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
 
     nodes_to_process_queue_ = std::queue<Node*>();
+    nodes_to_process_queue_.push(grid_.startNode_);
 }
 
 void BFS::processNode() {
