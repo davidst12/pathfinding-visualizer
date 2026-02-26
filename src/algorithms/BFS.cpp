@@ -1,12 +1,22 @@
 #include "Pathfinding/algorithms/BFS.hpp"
 
-BFS::BFS() : IAlgorithm() {}
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
 
-AlgorithmResult BFS::runAlgorithm(Grid& grid) {
+BFS::BFS() : IAlgorithm() {
+    algorithmStateChange(AlgorithmState::IDLE);
+}
 
+bool BFS::prepare(Grid& grid) {
     resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::READY);
 
-    nodes_to_process_queue_.push(grid_.startNode_);
+    return true;
+}
+
+AlgorithmResult BFS::solve() {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
     algorithmStateChange(AlgorithmState::RUNNING);
     
     auto start = std::chrono::high_resolution_clock::now();
@@ -29,15 +39,36 @@ AlgorithmResult BFS::runAlgorithm(Grid& grid) {
     return result_;
 }
 
+AlgorithmResult BFS::step() {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
+    algorithmStateChange(AlgorithmState::RUNNING);
+
+    if(!nodes_to_process_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+        processNode();
+    }
+    if(result_.state == AlgorithmState::PATH_FOUND) {
+        result_.path = getPath();
+    } else if(nodes_to_process_queue_.empty()) {
+        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+    }
+    generateStatistics();
+
+    return result_;
+}
+
 void BFS::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
+    result_.path = std::vector<Node>();
 
     grid_ = grid;
     grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
     grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
 
     nodes_to_process_queue_ = std::queue<Node*>();
+    nodes_to_process_queue_.push(grid_.startNode_);
 }
 
 void BFS::processNode() {
@@ -90,6 +121,7 @@ void BFS::algorithmStateChange(AlgorithmState state) {
 }
 
 void BFS::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::BFS;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }

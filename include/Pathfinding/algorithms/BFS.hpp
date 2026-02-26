@@ -9,12 +9,12 @@
 class BFS : public IAlgorithm
 {
 public:
-
     BFS();
-
-    AlgorithmResult runAlgorithm(Grid& grid) override;
-
     ~BFS() override = default;
+
+    bool prepare(Grid& grid) override;
+    AlgorithmResult solve() override;
+    AlgorithmResult step() override;
     
 private:
     std::queue<Node*> nodes_to_process_queue_; ///< Cola de nodos a procesar durante el algoritmo.

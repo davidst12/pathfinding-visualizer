@@ -7,43 +7,18 @@
 #include "Pathfinding/algorithms/DFS.hpp"
 #include "Pathfinding/algorithms/Dijkstra.hpp"
 #include "Pathfinding/algorithms/AStar.hpp"
+#include "Pathfinding/visualization/Visualization.hpp"
+
+#include "Pathfinding/app/App.hpp"
 
 int main() {
     std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
 
-    /*std::vector<std::string> grid =
-    { "XXXXXXXXXXXXXXXX"
-    , "XOSOOOWOOOOOOOOX"
-    , "XOXXXXXXOXXXXXOX"
-    , "XOOOOXOOOOOOXOOX"
-    , "XOXXOXOXXXOOXOOX"
-    , "XOOGOXOOOOWOOOOX"
-    , "XOXXXXXXXOXXXXXX"
-    , "XOWWWWOEOOOOOOOX"
-    , "XXXXXXXXXXXXXXXX"
-    };*/
-    /*std::vector<std::string> grid =
-    { "XXXXXXXX"
-    , "XOOOOOOX"
-    , "XOSXOOOX"
-    , "XOOXOOOX"
-    , "XXXXXOXX"
-    , "XOXOOOOX"
-    , "XOEOXOOX"
-    , "XXXXXXXX"
-    };*/
+    App app;
+    app.run();
+
     /*
-    std::vector<std::string> grid =
-    { "XXXXXXXX"
-    , "XOOOOOOX"
-    , "XOOSOOOX"
-    , "XWWWWGOX"
-    , "XWWWWWOX"
-    , "XWWWWOOX"
-    , "XOOEOOOX"
-    , "XXXXXXXX"
-    };
-    */
+
    std::vector<std::string> grid =
     { "XXXXXXXXXXXXX"
     , "XOOOOOOOOOOOX"
@@ -80,7 +55,9 @@ int main() {
 
    std::cout << "----------- A* -----------" << std::endl;
    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
-    std::cout << a_star_result.toString() << std::endl;
+   std::cout << a_star_result.toString() << std::endl;
 
-    return 0;
+   */
+
+   return 0;
 }

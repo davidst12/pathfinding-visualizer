@@ -8,9 +8,12 @@
 class IAlgorithm {
     public:
         IAlgorithm() {};
-        virtual AlgorithmResult runAlgorithm(Grid& grid) = 0;
-
         virtual ~IAlgorithm() = default;
+        
+        virtual bool prepare(Grid& grid) = 0;
+        virtual AlgorithmResult solve() = 0;
+        virtual AlgorithmResult step() = 0;
+
     protected:
         Grid grid_;
         AlgorithmResult result_;

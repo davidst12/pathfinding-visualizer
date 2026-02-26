@@ -1,13 +1,21 @@
 #include "Pathfinding/algorithms/Dijkstra.hpp"
 
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
 Dijkstra::Dijkstra() : IAlgorithm() {}
 
-AlgorithmResult Dijkstra::runAlgorithm(Grid& grid) {
-
+bool Dijkstra::prepare(Grid& grid) {
     resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::READY);
 
-    grid_.startNode_->setPathWeight(0);
-    priority_node_queue_.push(grid_.startNode_);
+    return true;
+}
+
+AlgorithmResult Dijkstra::solve() {
+
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
     algorithmStateChange(AlgorithmState::RUNNING);
     
     auto start = std::chrono::high_resolution_clock::now();
@@ -30,15 +38,37 @@ AlgorithmResult Dijkstra::runAlgorithm(Grid& grid) {
     return result_;
 }
 
+AlgorithmResult Dijkstra::step() {
+
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
+    algorithmStateChange(AlgorithmState::RUNNING);
+    if(!priority_node_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+        processNode();
+    }
+    if(result_.state == AlgorithmState::PATH_FOUND) {
+        result_.path = getPath();
+    } else if(priority_node_queue_.empty()) {
+        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+    }
+    generateStatistics();
+
+    return result_;
+}
+
 void Dijkstra::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
+    result_.path = std::vector<Node>();
 
     grid_ = grid;
     grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
     grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
+    grid_.startNode_->setPathWeight(0);
 
     priority_node_queue_ = std::priority_queue<Node*, std::vector<Node*>, CompareNodes>();
+    priority_node_queue_.push(grid_.startNode_);
 }
 
 void Dijkstra::processNode() {
@@ -92,6 +122,7 @@ void Dijkstra::algorithmStateChange(AlgorithmState state) {
 }
 
 void Dijkstra::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::Dijkstra;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }

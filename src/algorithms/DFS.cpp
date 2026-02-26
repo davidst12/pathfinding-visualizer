@@ -1,12 +1,21 @@
 #include "Pathfinding/algorithms/DFS.hpp"
 
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
 DFS::DFS() : IAlgorithm() {}
 
-AlgorithmResult DFS::runAlgorithm(Grid& grid) {
-
+bool DFS::prepare(Grid& grid) {
     resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::READY);
 
-    nodes_to_process_stack_.push(grid_.startNode_);
+    return true;
+}
+
+AlgorithmResult DFS::solve() {
+
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
     algorithmStateChange(AlgorithmState::RUNNING);
     
     auto start = std::chrono::high_resolution_clock::now();
@@ -29,15 +38,36 @@ AlgorithmResult DFS::runAlgorithm(Grid& grid) {
     return result_;
 }
 
+AlgorithmResult DFS::step() {
+
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
+        return result_;
+    }
+    algorithmStateChange(AlgorithmState::RUNNING);
+    if(!nodes_to_process_stack_.empty() && result_.state == AlgorithmState::RUNNING) {
+        processNode();
+    }
+    if(result_.state == AlgorithmState::PATH_FOUND) {
+        result_.path = getPath();
+    } else if(nodes_to_process_stack_.empty()) {
+        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+    }
+    generateStatistics();
+
+    return result_;
+}
+
 void DFS::resetAlgorithm(Grid& grid) {
     result_.nodes_processed_count = 0;
     result_.nodes_processed_ratio = 0;
+    result_.path = std::vector<Node>();
 
     grid_ = grid;
     grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
     grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
 
     nodes_to_process_stack_ = std::stack<Node*>();
+    nodes_to_process_stack_.push(grid_.startNode_);
 }
 
 void DFS::processNode() {
@@ -90,6 +120,7 @@ void DFS::algorithmStateChange(AlgorithmState state) {
 }
 
 void DFS::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::DFS;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }
