@@ -1,5 +1,7 @@
 #include "Pathfinding/algorithms/DFS.hpp"
 
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
 DFS::DFS() : IAlgorithm() {}
 
 bool DFS::prepare(Grid& grid) {
@@ -11,7 +13,7 @@ bool DFS::prepare(Grid& grid) {
 
 AlgorithmResult DFS::solve() {
 
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -38,7 +40,7 @@ AlgorithmResult DFS::solve() {
 
 AlgorithmResult DFS::step() {
 
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -118,6 +120,7 @@ void DFS::algorithmStateChange(AlgorithmState state) {
 }
 
 void DFS::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::DFS;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }

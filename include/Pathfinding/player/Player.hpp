@@ -17,12 +17,13 @@ public:
 
 private:
     Visualization visualization;
-    std::unique_ptr<IAlgorithm> algorithm;
+    std::vector<std::unique_ptr<IAlgorithm>> algorithms;
     std::shared_ptr<Grid> grid;
     AlgorithmExecutionMode executionMode;
-    AlgorithmPreparation preparation;
+    AlgorithmTestMode testMode;
 
     AppStateEvent handleMainMenuState();
+    AppStateEvent handleSelectTestModeMenuState();
     AppStateEvent handleSelectAlgorithmMenuState();
     AppStateEvent handleSelectMapMenuState();
     AppStateEvent handleSelectExecutionMenuState();

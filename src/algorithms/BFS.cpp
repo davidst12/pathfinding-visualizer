@@ -1,5 +1,7 @@
 #include "Pathfinding/algorithms/BFS.hpp"
 
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
 BFS::BFS() : IAlgorithm() {
     algorithmStateChange(AlgorithmState::IDLE);
 }
@@ -12,7 +14,7 @@ bool BFS::prepare(Grid& grid) {
 }
 
 AlgorithmResult BFS::solve() {
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -38,7 +40,7 @@ AlgorithmResult BFS::solve() {
 }
 
 AlgorithmResult BFS::step() {
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -119,6 +121,7 @@ void BFS::algorithmStateChange(AlgorithmState state) {
 }
 
 void BFS::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::BFS;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }

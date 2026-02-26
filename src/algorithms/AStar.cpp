@@ -1,5 +1,7 @@
 #include "Pathfinding/algorithms/AStar.hpp"
 
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
 AStar::AStar() : IAlgorithm() {}
 
 bool AStar::prepare(Grid& grid) {
@@ -11,7 +13,7 @@ bool AStar::prepare(Grid& grid) {
 
 AlgorithmResult AStar::solve() {
 
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -38,7 +40,7 @@ AlgorithmResult AStar::solve() {
 
 AlgorithmResult AStar::step() {
 
-    if(result_.state == AlgorithmState::IDLE) {
+    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
         return result_;
     }
     algorithmStateChange(AlgorithmState::RUNNING);
@@ -126,6 +128,7 @@ void AStar::algorithmStateChange(AlgorithmState state) {
 }
 
 void AStar::generateStatistics() {
+    result_.algorithm_type = AlgorithmType::AStar;
     result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
     result_.grid_resolved = &grid_;
 }

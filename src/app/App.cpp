@@ -24,6 +24,9 @@ void App::processAppStateEvent(AppStateEvent event) {
     } else if (event == AppStateEvent::Continue) {
         switch(appState) {
             case AppState::MainMenu:
+                appState = AppState::SelectTestModeMenu;
+                break;
+            case AppState::SelectTestModeMenu:
                 appState = AppState::SelectAlgorithmMenu;
                 break;
             case AppState::SelectAlgorithmMenu:
@@ -44,8 +47,11 @@ void App::processAppStateEvent(AppStateEvent event) {
             case AppState::MainMenu:
                 appState = AppState::Exit;
                 break;
-            case AppState::SelectAlgorithmMenu:
+            case AppState::SelectTestModeMenu:
                 appState = AppState::MainMenu;
+                break;
+            case AppState::SelectAlgorithmMenu:
+                appState = AppState::SelectTestModeMenu;
                 break;
             case AppState::SelectMapMenu:
                 appState = AppState::SelectAlgorithmMenu;

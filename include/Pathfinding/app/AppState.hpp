@@ -3,6 +3,7 @@
 enum class AppState
 {
     MainMenu,
+    SelectTestModeMenu,
     SelectAlgorithmMenu,
     SelectMapMenu,
     SelectExecutionMenu,

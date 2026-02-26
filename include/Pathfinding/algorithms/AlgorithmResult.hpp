@@ -7,6 +7,7 @@
 
 #include "Pathfinding/core/Node.hpp"
 #include "Pathfinding/core/Grid.hpp"
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
 
 enum class AlgorithmState {
     IDLE,
@@ -43,6 +44,7 @@ inline std::string state_to_string(AlgorithmState state)
 }
 
 struct AlgorithmResult {
+    AlgorithmType algorithm_type;
     AlgorithmState state = AlgorithmState::IDLE;
     Grid *grid_resolved;
     std::vector<Node> path;
@@ -52,11 +54,12 @@ struct AlgorithmResult {
 
     inline std::string toString() {
         std::string result_string = "Algorithm Result:\n";
-        result_string += "  State: "                     + state_to_string(state)                + "\n";
-        result_string += "  Nodes processed count: "     + std::to_string(nodes_processed_count) + " (" + std::to_string(grid_resolved->getEmptyNodesCount()) + ")\n";
-        result_string += "  Nodes processed ratio: "     + std::to_string(nodes_processed_ratio) + "% \n";
-        result_string += "  Time taken (microseconds): " + std::to_string(time.count())          + "\n";
-        result_string += "  Path size: "                 + std::to_string(path.size())           + "\n";
+        result_string += "  Algorithm: "                 + algorithm_type_to_string(algorithm_type) + "\n";
+        result_string += "  State: "                     + state_to_string(state)                   + "\n";
+        result_string += "  Nodes processed count: "     + std::to_string(nodes_processed_count)    + " (" + std::to_string(grid_resolved->getEmptyNodesCount()) + ")\n";
+        result_string += "  Nodes processed ratio: "     + std::to_string(nodes_processed_ratio)    + "% \n";
+        result_string += "  Time taken (microseconds): " + std::to_string(time.count())             + "\n";
+        result_string += "  Path size: "                 + std::to_string(path.size())              + "\n";
         result_string += "  Cost: "                      + std::to_string(grid_resolved->endNode_->getPathWeight()) + "\n";
         return result_string;
     }

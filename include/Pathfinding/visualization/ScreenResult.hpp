@@ -1,9 +1,11 @@
 #pragma once
 
+#include <set>
+
 #include "Pathfinding/app/AppStateEvent.hpp"
 
 struct ScreenResult
 {
     AppStateEvent state_event = AppStateEvent::Unhandled;
-    int optionSelected = 0;;
+    std::set<int> optionsSelected = {};
 };
