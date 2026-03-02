@@ -3,6 +3,7 @@
 #include "Pathfinding/player/Player.hpp"
 #include "Pathfinding/app/AppState.hpp"
 #include "Pathfinding/app/AppStateEvent.hpp"
+#include "Pathfinding/managers/MapManager.hpp"
 
 class App
 {
@@ -14,6 +15,7 @@ public:
 private:
     Player player;
     AppState appState;
+    MapManager mapManager;
 
     void processAppStateEvent(AppStateEvent event);
 };

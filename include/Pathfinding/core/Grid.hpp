@@ -7,6 +7,7 @@
 #include "Pathfinding/core/Position.hpp"
 
 struct GridInfo {
+    std::string name_;
     int width_;              
     int height_;             
     int empty_nodes_count_;
@@ -21,7 +22,7 @@ private:
 
 public:
 
-    Grid(std::vector<std::string> grid);
+    Grid(std::string name, std::vector<std::string> grid);
     Grid() = default;
 
     Node* startNode_;

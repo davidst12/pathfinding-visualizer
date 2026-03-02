@@ -7,6 +7,10 @@ void App::run() {
     appState = AppState::MainMenu;
     AppStateEvent event;
 
+    MapManager mapManager;
+    mapManager.loadAllMaps("assets/");
+    player.setAvailableMaps(mapManager.getAllMaps());
+
     while(true) {
         event = player.processAppState(appState);
         processAppStateEvent(event);
@@ -14,7 +18,7 @@ void App::run() {
         if (appState == AppState::Exit) {
             break;
         }
-    }   
+    }
 }
 
 void App::processAppStateEvent(AppStateEvent event) {

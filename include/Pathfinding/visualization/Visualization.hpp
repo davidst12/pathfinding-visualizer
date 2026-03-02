@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <map>
 
 #include "Pathfinding/algorithms/AlgorithmResult.hpp"
 #include "Pathfinding/player/AlgorithmPreparation.hpp"
@@ -17,7 +18,7 @@ public:
     ScreenResult displayMainMenu();
     ScreenResult displayAlgorithmTestModeSelectionScreen(std::vector<std::string> options);
     ScreenResult displayAlgorithmSelectionScreen(std::vector<std::string> options, bool allow_multiple_selection = false);
-    ScreenResult displayMapSelectionScreen(std::vector<std::string> options, std::vector<Grid> maps);
+    ScreenResult displayMapSelectionScreen(std::string title, std::map<std::string, Grid> maps);
     ScreenResult displayExecutionSelectionScreen(std::vector<std::string> options);
     ScreenResult displayPlayingScreen(std::vector<AlgorithmResult> results, bool wait_for_input = true);
 

@@ -166,7 +166,15 @@ ScreenResult Visualization::displayAlgorithmSelectionScreen(std::vector<std::str
     return screen_result;
 }
     
-ScreenResult Visualization::displayMapSelectionScreen(std::vector<std::string> options, std::vector<Grid> maps) {
+ScreenResult Visualization::displayMapSelectionScreen(std::string title, std::map<std::string, Grid> maps) {
+    std::vector<std::string> options = {title};
+    std::vector<Grid> grids;
+    int index = 1;
+    for(const auto& [name, grid] : maps) {
+        options.push_back(std::to_string(index) + ". " + name);
+        grids.push_back(grid);
+        index++;
+    }
     OptionsMenuText optionsMenuText(options, font);
 
     int selectedOption = 1;
@@ -179,7 +187,7 @@ ScreenResult Visualization::displayMapSelectionScreen(std::vector<std::string> o
 
     while(screen_result.state_event == AppStateEvent::Unhandled) {
         optionsMenuText.newSelectedPiece(selectedOption);
-        map_preview = gridToVertexArray(maps[selectedOption - 1], 0, false);
+        map_preview = gridToVertexArray(grids[selectedOption-1], 0, false);
 
         window.clear(sf::Color(30, 30, 30));
         window.draw(map_preview, transformacion);

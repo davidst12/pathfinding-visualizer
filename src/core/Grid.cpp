@@ -2,11 +2,12 @@
 
 #include "Pathfinding/core/Grid.hpp"
 
-Grid::Grid(std::vector<std::string> grid)
+Grid::Grid(std::string name, std::vector<std::string> grid)
 {
     int columnIndex_ = 0;
     Position startPosition;
     Position endPosition;
+    grid_info_.name_ = name;
     grid_info_.empty_nodes_count_ = 0;
     grid_info_.total_nodes_count_ = 0;
 

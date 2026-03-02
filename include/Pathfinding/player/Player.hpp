@@ -12,12 +12,14 @@ public:
     Player(VisualizationType visualization_type);
 
     AppStateEvent processAppState(AppState state);
+    void setAvailableMaps(std::map<std::string, Grid> maps);
 
     void init();
 
 private:
     Visualization visualization;
     std::vector<std::unique_ptr<IAlgorithm>> algorithms;
+    std::map<std::string, Grid> maps;
     std::shared_ptr<Grid> grid;
     AlgorithmExecutionMode executionMode;
     AlgorithmTestMode testMode;

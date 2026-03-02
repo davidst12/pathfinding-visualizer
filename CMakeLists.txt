@@ -17,6 +17,7 @@ endif()
 ##### External libraries #####
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System)
+find_package(nlohmann_json REQUIRED)
 
 # Recogemos todos los .cpp de la lógica (excepto el main.cpp)
 file(GLOB_RECURSE SOURCES 
@@ -24,7 +25,8 @@ file(GLOB_RECURSE SOURCES
     "src/algorithms/*.cpp"
     "src/visualization/*.cpp"
     "src/app/*.cpp"
-    "src/player/*.cpp")
+    "src/player/*.cpp"
+    "src/managers/*.cpp")
 
 # Creamos la librería
 add_library(PathfindingLib ${SOURCES})
@@ -37,7 +39,8 @@ target_link_libraries(PathfindingApp
     PathfindingLib
     SFML::Graphics 
     SFML::Window 
-    SFML::System)
+    SFML::System
+    nlohmann_json::nlohmann_json)
 
 
 ##### Tests #####

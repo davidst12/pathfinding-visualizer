@@ -50,6 +50,10 @@ AppStateEvent Player::processAppState(AppState state)
     return event;
 }
 
+void Player::setAvailableMaps(std::map<std::string, Grid> maps) { 
+    this->maps = maps;
+}
+
 AppStateEvent Player::handleMainMenuState()
 {
     return visualization.displayMainMenu().state_event;
@@ -105,30 +109,10 @@ AppStateEvent Player::handleSelectAlgorithmMenuState()
 AppStateEvent Player::handleSelectMapMenuState() {
     grid.reset();
 
-    std::vector<std::string> options = {"Select Map", "1. Map 1", "2. Map 2", "3. Map 3", "4. Map 4", "5. Map 5", "6. Map 6"};
-    ScreenResult screen_result = visualization.displayMapSelectionScreen(options, {map1, map2, map3, map4, map5, map6});
-    switch (*screen_result.optionsSelected.begin()) {
-        case 1:
-            grid = std::make_shared<Grid>(map1);
-            break;
-        case 2:
-            grid = std::make_shared<Grid>(map2);
-            break;
-        case 3:
-            grid = std::make_shared<Grid>(map3);
-            break;
-        case 4:
-            grid = std::make_shared<Grid>(map4);
-            break;
-        case 5:
-            grid = std::make_shared<Grid>(map5);
-            break;
-        case 6:
-            grid = std::make_shared<Grid>(map6);
-            break;
-        default:
-            break;
-    }
+    std::vector<Grid> maps_vector;
+    for(const auto& [name, grid] : maps) maps_vector.push_back(grid);
+    ScreenResult screen_result = visualization.displayMapSelectionScreen("Select Map", maps);
+    grid = std::make_shared<Grid>(maps_vector.at(*screen_result.optionsSelected.begin() - 1));
 
     return screen_result.state_event;
 }
