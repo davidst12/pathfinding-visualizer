@@ -6,7 +6,7 @@ enum class AlgorithmType
     Dijkstra,
     BFS,
     DFS,
-    Unknown,
+    Unknown
 };
 
 inline std::string algorithm_type_to_string(AlgorithmType type)
@@ -37,11 +37,13 @@ enum class AlgorithmExecutionMode
 {
     StepByStep,
     Instant,
-    Animated
+    Animated,
+    Unknown
 };
 
 enum class AlgorithmTestMode
 {
     SingleAlgorithm,
     MultipleAlgorithms,
+    Unknown
 };

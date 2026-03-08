@@ -35,6 +35,8 @@ public:
 
     Node* getNodeFromPosition(Position pos);
 
+    std::string getName();
+
     int getGridHeight();
 
     int getGridWidth();

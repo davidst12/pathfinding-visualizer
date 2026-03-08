@@ -30,7 +30,6 @@ AlgorithmResult BFS::solve() {
 
     if(result_.state == AlgorithmState::PATH_FOUND) {
         result_.path = getPath();
-        std::cout << grid_.toStringWithPath(result_.path);
     } else {
         algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
     }
@@ -115,7 +114,6 @@ std::vector<Node> BFS::getPath() {
 
 void BFS::algorithmStateChange(AlgorithmState state) {
     if(result_.state != state) {
-        std::cout << "Algorithm state: " << state_to_string(state) << std::endl;
         result_.state = state;
     }
 }

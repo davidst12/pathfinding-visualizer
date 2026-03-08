@@ -98,6 +98,10 @@ std::string Grid::toStringWithPath(std::vector<Node> path) {
     return grid_string;
 }
 
+std::string Grid::getName() {
+    return grid_info_.name_;
+}
+
 Node* Grid::getNodeFromPosition(Position pos) {
     return &grid_[pos.y][pos.x];
 }

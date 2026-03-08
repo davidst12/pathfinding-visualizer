@@ -21,7 +21,6 @@ void MapManager::loadAllMaps(const std::string& folderPath) {
     for (const auto& entry : fs::directory_iterator(folderPath)) {
         if (entry.path().extension() == ".json") {
             loadMap(entry.path().string());
-            std::cout << "Mapa cargado: " << entry.path().filename() << std::endl;
         }
     }
 }
@@ -45,8 +44,6 @@ void MapManager::loadMap(const std::string& filePath) {
     }
 
     loadedMaps[name] = Grid(name, grid_string);
-    std::cout << "Mapa cargado: " << name << std::endl;
-    std::cout << "Mapa cargado: " << loadedMaps[name].toString() << std::endl;
 }
 
 std::map<std::string, Grid> MapManager::getAllMaps() { 

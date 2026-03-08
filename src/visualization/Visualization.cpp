@@ -5,8 +5,6 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
-#include "Pathfinding/visualization/OptionsMenuText.hpp"
-
 
 Visualization::Visualization() {
     window = sf::RenderWindow(sf::VideoMode({800, 600}), "Pathfinding Visualizer - SFML 3");
@@ -15,10 +13,8 @@ Visualization::Visualization() {
     }
 }
 
-ScreenResult Visualization::displayMainMenu() {
+BasicScreenResult Visualization::displayHome() {
 
-    // sf::View newView(sf::FloatRect({0.f, 0.f}, {800, 600}));
-    // window.setView(newView);
     window = sf::RenderWindow(sf::VideoMode({static_cast<unsigned int>(800), 600}), "Pathfinding Visualizer - SFML 3");
 
     sf::Text text(font);
@@ -41,7 +37,7 @@ ScreenResult Visualization::displayMainMenu() {
     text.setPosition({400.0f, 200.0f});
     sub_text.setPosition({400.0f, 300.0f});
 
-    ScreenResult screen_result;
+    BasicScreenResult screen_result;
 
     while(true) {
         window.clear(sf::Color(30, 30, 30));
@@ -67,33 +63,28 @@ ScreenResult Visualization::displayMainMenu() {
     return screen_result;
 }
 
-ScreenResult Visualization::displayAlgorithmTestModeSelectionScreen(std::vector<std::string> options) {
-    OptionsMenuText optionsMenuText(options, font);
+TestModeSelectionResult Visualization::displayTestModeSelectionScreen() {
+    std::string title = "Select test mode";
+    std::vector<std::string> options = {"1. Single Algorithm", "2. Multiple Algorithms"};
+    SelectionText optionsMenuText(title, options, font, false);
 
-    int selectedOption = 1;
-
-    ScreenResult screen_result;
+    TestModeSelectionResult screen_result;
 
     while(screen_result.state_event == AppStateEvent::Unhandled) {
-        optionsMenuText.newSelectedPiece(selectedOption);
-
-        window.clear(sf::Color(30, 30, 30));
-        window.draw(optionsMenuText);
-        window.display();
+        displayOptionsScreen(optionsMenuText);
     
         const std::optional event = window.waitEvent();
     
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             switch(keyPressed->code) {
                 case sf::Keyboard::Key::Up:
-                    if (selectedOption > 1) selectedOption -= 1;
+                    optionsMenuText.moveUp();
                     break;
                 case sf::Keyboard::Key::Down:
-                    if (selectedOption < options.size() - 1) selectedOption += 1;
+                    optionsMenuText.moveDown();
                     break;
                 case sf::Keyboard::Key::Enter: 
                     screen_result.state_event = AppStateEvent::Continue;
-                    screen_result.optionsSelected.emplace(selectedOption);
                     break;
                 case sf::Keyboard::Key::B:
                     screen_result.state_event = AppStateEvent::Back;
@@ -106,49 +97,43 @@ ScreenResult Visualization::displayAlgorithmTestModeSelectionScreen(std::vector<
             }
         }
     }
+    switch(optionsMenuText.getSelectedOption()) {
+        case 1:
+            screen_result.test_mode = AlgorithmTestMode::SingleAlgorithm;
+            break;
+        case 2:
+            screen_result.test_mode = AlgorithmTestMode::MultipleAlgorithms;
+            break;
+        default:
+            break;
+    }
 
     return screen_result;
 }
 
-ScreenResult Visualization::displayAlgorithmSelectionScreen(std::vector<std::string> options, bool allow_multiple_selection) {
-    if(allow_multiple_selection) options.push_back("<<Continue>>");
-    OptionsMenuText optionsMenuText(options, font);
+AlgorithmSelectionResult Visualization::displayAlgorithmSelectionScreen(bool allow_multiple_selection) {
+    std::string title = "Select Algorithm/s";
+    std::vector<std::string> options = {"1. BFS", "2. DFS", "3. Dijkstra", "4. A*"};
+    SelectionText optionsMenuText(title, options, font, allow_multiple_selection);
 
-    int selectedOption = 1;
-
-    ScreenResult screen_result;
+    AlgorithmSelectionResult screen_result;
 
     while(screen_result.state_event == AppStateEvent::Unhandled) {
-        optionsMenuText.newSelectedPiece(selectedOption);
-        window.clear(sf::Color(30, 30, 30));
-        window.draw(optionsMenuText);
-        window.display();
+        displayOptionsScreen(optionsMenuText);
     
         const std::optional event = window.waitEvent();
     
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             switch(keyPressed->code) {
                 case sf::Keyboard::Key::Up:
-                    if (selectedOption > 1) selectedOption -= 1;
+                    optionsMenuText.moveUp();
                     break;
                 case sf::Keyboard::Key::Down:
-                    if (selectedOption < options.size() - 1) selectedOption += 1;
+                    optionsMenuText.moveDown();
                     break;
                 case sf::Keyboard::Key::Enter:
-                    if(!allow_multiple_selection) {
+                    if(optionsMenuText.pressedEnter()) {
                         screen_result.state_event = AppStateEvent::Continue;
-                        screen_result.optionsSelected.emplace(selectedOption);
-                        break;
-                    }
-                    if(selectedOption == options.size() - 1) {
-                        if(!screen_result.optionsSelected.empty()) screen_result.state_event = AppStateEvent::Continue;
-                        break;
-                    } else 
-                    optionsMenuText.newPeressedPiece(selectedOption);
-                    if(screen_result.optionsSelected.contains(selectedOption)) {
-                        screen_result.optionsSelected.erase(selectedOption);
-                    } else {
-                        screen_result.optionsSelected.emplace(selectedOption);
                     }
                     break;
                 case sf::Keyboard::Key::B:
@@ -162,12 +147,31 @@ ScreenResult Visualization::displayAlgorithmSelectionScreen(std::vector<std::str
             }
         }
     }
+    for (auto& option : optionsMenuText.getSelectedOptions()) {
+        switch(option) {
+            case 1:
+                screen_result.algorithms_selected.emplace(AlgorithmType::BFS);
+                break;
+            case 2:
+                screen_result.algorithms_selected.emplace(AlgorithmType::DFS);
+                break;
+            case 3:
+                screen_result.algorithms_selected.emplace(AlgorithmType::Dijkstra);
+                break;
+            case 4:
+                screen_result.algorithms_selected.emplace(AlgorithmType::AStar);
+                break;
+            default:
+                break;
+        }
+    }
 
     return screen_result;
 }
     
-ScreenResult Visualization::displayMapSelectionScreen(std::string title, std::map<std::string, Grid> maps) {
-    std::vector<std::string> options = {title};
+MapSelectionResult Visualization::displayMapSelectionScreen(std::map<std::string, Grid> maps) {
+    std::string title = "Select Map";
+    std::vector<std::string> options;
     std::vector<Grid> grids;
     int index = 1;
     for(const auto& [name, grid] : maps) {
@@ -175,19 +179,16 @@ ScreenResult Visualization::displayMapSelectionScreen(std::string title, std::ma
         grids.push_back(grid);
         index++;
     }
-    OptionsMenuText optionsMenuText(options, font);
+    SelectionText optionsMenuText(title, options, font);
 
-    int selectedOption = 1;
-
-    ScreenResult screen_result;
+    MapSelectionResult screen_result;
 
     sf::VertexArray map_preview;
     sf::Transform transformacion;
     transformacion.translate({-50.f, -50.f});
 
     while(screen_result.state_event == AppStateEvent::Unhandled) {
-        optionsMenuText.newSelectedPiece(selectedOption);
-        map_preview = gridToVertexArray(grids[selectedOption-1], 0, false);
+        map_preview = gridToVertexArray(grids[optionsMenuText.getSelectedOption() - 1], 0, false);
 
         window.clear(sf::Color(30, 30, 30));
         window.draw(map_preview, transformacion);
@@ -199,14 +200,13 @@ ScreenResult Visualization::displayMapSelectionScreen(std::string title, std::ma
         if (const sf::Event::KeyPressed* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             switch (keyPressed->code) {
                 case sf::Keyboard::Key::Up:
-                    if (selectedOption > 1) selectedOption -= 1;
+                    optionsMenuText.moveUp();
                     break;
                 case sf::Keyboard::Key::Down:
-                    if (selectedOption < options.size() - 1) selectedOption += 1;
+                    optionsMenuText.moveDown();
                     break;
                 case sf::Keyboard::Key::Enter: 
                     screen_result.state_event = AppStateEvent::Continue;
-                    screen_result.optionsSelected.emplace(selectedOption);
                     break;
                 case sf::Keyboard::Key::B:
                     screen_result.state_event = AppStateEvent::Back;
@@ -219,36 +219,33 @@ ScreenResult Visualization::displayMapSelectionScreen(std::string title, std::ma
             }
         }
     }
+    screen_result.map_name = grids[optionsMenuText.getSelectedOption() - 1].getName();
 
     return screen_result;
 }
 
-ScreenResult Visualization::displayExecutionSelectionScreen(std::vector<std::string> options) {
-    OptionsMenuText optionsMenuText(options, font);
+ExecutionSelectionResult Visualization::displayExecutionSelectionScreen() {
+    std::string title = "Select Execution mode";
+    std::vector<std::string> options = {"1. Fast", "2. Step by step", "3. Animated"};
+    SelectionText optionsMenuText(title, options, font);
 
-    int selectedOption = 1;
-
-    ScreenResult screen_result;
+    ExecutionSelectionResult screen_result;
 
     while(screen_result.state_event == AppStateEvent::Unhandled) {
-        optionsMenuText.newSelectedPiece(selectedOption);
-        window.clear(sf::Color(30, 30, 30));
-        window.draw(optionsMenuText);
-        window.display();
+        displayOptionsScreen(optionsMenuText);
     
         const std::optional event = window.waitEvent();
     
         if (const sf::Event::KeyPressed* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             switch (keyPressed->code) {
                 case sf::Keyboard::Key::Up:
-                    if (selectedOption > 1) selectedOption -= 1;
+                    optionsMenuText.moveUp();
                     break;
                 case sf::Keyboard::Key::Down:
-                    if (selectedOption < options.size() - 1) selectedOption += 1;
+                    optionsMenuText.moveDown();
                     break;
                 case sf::Keyboard::Key::Enter: 
                     screen_result.state_event = AppStateEvent::Continue;
-                    screen_result.optionsSelected.emplace(selectedOption);
                     break;
                 case sf::Keyboard::Key::B:
                     screen_result.state_event = AppStateEvent::Back;
@@ -261,11 +258,24 @@ ScreenResult Visualization::displayExecutionSelectionScreen(std::vector<std::str
             }
         }
     }
+    switch (optionsMenuText.getSelectedOption()) {
+        case 1:
+            screen_result.execution_mode = AlgorithmExecutionMode::Instant;
+            break;
+        case 2:
+            screen_result.execution_mode = AlgorithmExecutionMode::StepByStep;
+            break;
+        case 3:
+            screen_result.execution_mode = AlgorithmExecutionMode::Animated;
+            break;
+        default:
+            break;
+    }
 
     return screen_result;
 }
 
-ScreenResult Visualization::displayPlayingScreen(std::vector<AlgorithmResult> result, bool wait_for_input) {
+BasicScreenResult Visualization::displaySimulationScreen(std::vector<AlgorithmResult> result, bool wait_for_input) {
 
     float new_window_width = 0;
 
@@ -286,7 +296,7 @@ ScreenResult Visualization::displayPlayingScreen(std::vector<AlgorithmResult> re
         window.setView(newView);
     }
 
-    ScreenResult screen_result;
+    BasicScreenResult screen_result;
 
     while(true) {
         window.clear(sf::Color(30, 30, 30));
@@ -320,6 +330,12 @@ ScreenResult Visualization::displayPlayingScreen(std::vector<AlgorithmResult> re
         if (!wait_for_input) break;
     }
     return screen_result;
+}
+
+void Visualization::displayOptionsScreen(SelectionText& optionsMenuText) {
+    window.clear(sf::Color(30, 30, 30));
+    window.draw(optionsMenuText);
+    window.display();
 }
 
 sf::VertexArray Visualization::gridToVertexArray(Grid& base_grid, int algorithmIndex, bool is_algorithm_running) {
