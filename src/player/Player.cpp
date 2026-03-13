@@ -1,11 +1,11 @@
 #include "Pathfinding/player/Player.hpp"
 
+#include <thread>
+
 #include "Pathfinding/algorithms/BFS.hpp"
 #include "Pathfinding/algorithms/DFS.hpp"
 #include "Pathfinding/algorithms/Dijkstra.hpp"
 #include "Pathfinding/algorithms/AStar.hpp"
-#include "Pathfinding/utils/maps.hpp"
-#include <thread>
 
 Player::Player(VisualizationType visualization_type)
 {
@@ -46,6 +46,8 @@ AppStateEvent Player::processAppState(AppState state)
     case AppState::Playing:
         event = handlePlayingState();
         break;
+    case AppState::Exit:
+            break;
     }
 
     return event;

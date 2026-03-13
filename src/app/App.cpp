@@ -47,6 +47,8 @@ void App::processAppStateEvent(AppStateEvent event) {
             case AppState::Playing:
                 appState = AppState::MainMenu;
                 break;
+            case AppState::Exit:
+                break;
         }
     } else if(event == AppStateEvent::Back) {
         switch(appState) {
@@ -67,6 +69,8 @@ void App::processAppStateEvent(AppStateEvent event) {
                 break;
             case AppState::Playing:
                 appState = AppState::SelectExecutionMenu;
+                break;
+            case AppState::Exit:
                 break;
         }
     }

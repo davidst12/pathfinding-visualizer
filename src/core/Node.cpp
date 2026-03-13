@@ -11,7 +11,7 @@ Node::Node(Position position, NodeType type)
     , path_weight_(0)
     , weight_(weightFromNodeType(type)) {}
 
-NodeState Node::getState() {
+NodeState Node::getState() const {
     return state_;
 }
 void Node::setState(NodeState new_state) {
@@ -22,11 +22,11 @@ void Node::setPosition(Position position) {
     position_ = position;
 }
 
-Position Node::getPosition() {
+Position Node::getPosition() const {
     return position_;
 }
 
-Node* Node::getParent() {
+Node* Node::getParent() const {
     return parent_;
 }
 void Node::setParent(Node* parent) {
@@ -37,11 +37,11 @@ void Node::setType(NodeType type) {
     type_ = type;
     weight_ = weightFromNodeType(type);
 }
-NodeType Node::getType() {
+NodeType Node::getType() const {
     return type_;
 }
 
-char Node::getChar() {
+char Node::getChar() const {
     return charFromNodeType(type_);
 }
 

@@ -80,6 +80,7 @@ public:
                 }
             }
         }
+        return false;
     }
 
     inline std::set<int> getSelectedOptions() const {

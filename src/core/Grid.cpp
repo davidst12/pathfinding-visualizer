@@ -63,7 +63,7 @@ Grid::Grid(std::string name, std::vector<std::string> grid)
     endNode_ = &grid_[endPosition.y][endPosition.x];
 }
 
-std::string Grid::toString() {
+std::string Grid::toString() const {
     std::string grid_string = "";
 
     for(int columnIndex = 0; columnIndex<grid_.size(); columnIndex++) {
@@ -76,7 +76,7 @@ std::string Grid::toString() {
     return grid_string;
 }
 
-std::string Grid::toStringWithPath(std::vector<Node> path) {
+std::string Grid::toStringWithPath(std::vector<Node> path) const {
     std::string grid_string = "";
 
     for(int columnIndex = 0; columnIndex<grid_.size(); columnIndex++) {
@@ -98,7 +98,7 @@ std::string Grid::toStringWithPath(std::vector<Node> path) {
     return grid_string;
 }
 
-std::string Grid::getName() {
+std::string Grid::getName() const {
     return grid_info_.name_;
 }
 
@@ -106,25 +106,25 @@ Node* Grid::getNodeFromPosition(Position pos) {
     return &grid_[pos.y][pos.x];
 }
 
-int Grid::getGridHeight() {
+int Grid::getGridHeight() const {
     return grid_info_.height_;
 }
 
-int Grid::getGridWidth() {
+int Grid::getGridWidth() const {
     return grid_info_.width_;
 }
 
-bool Grid::checkPositionValidity(Position pos) {
+bool Grid::checkPositionValidity(Position pos) const {
     if(pos.x >= grid_info_.width_ || pos.x < 0) return false;
     else if(pos.y >= grid_info_.height_ || pos.y < 0) return false;
     
     return true;
 }
 
-int Grid::getEmptyNodesCount() {
+int Grid::getEmptyNodesCount() const {
     return grid_info_.empty_nodes_count_;
 }
 
-int Grid::getTotalNodesCount() {
+int Grid::getTotalNodesCount() const {
     return grid_info_.total_nodes_count_;
 }

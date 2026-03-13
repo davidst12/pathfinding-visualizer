@@ -29,22 +29,22 @@ public:
     Node* endNode_;
     GridInfo grid_info_;
 
-    std::string toString();
+    std::string toString() const;
 
-    std::string toStringWithPath(std::vector<Node> path);
+    std::string toStringWithPath(std::vector<Node> path) const;
 
     Node* getNodeFromPosition(Position pos);
 
-    std::string getName();
+    std::string getName() const;
 
-    int getGridHeight();
+    int getGridHeight() const;
 
-    int getGridWidth();
+    int getGridWidth() const;
 
-    int getEmptyNodesCount();
+    int getEmptyNodesCount() const;
 
-    int getTotalNodesCount();
+    int getTotalNodesCount() const;
 
-    bool checkPositionValidity(Position pos);
+    bool checkPositionValidity(Position pos) const;
 
 };

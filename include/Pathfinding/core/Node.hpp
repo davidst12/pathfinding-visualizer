@@ -51,14 +51,14 @@ public:
     Node(Position position, NodeType type);
 
     // GETTERS
-    NodeState getState();
-    Position getPosition();
-    Node* getParent();
-    NodeType getType();
-    char getChar();
-    int getCostToEnd() { return cost_to_end_; }
-    int getWeight() { return weight_; }
-    int getPathWeight() { return path_weight_; }
+    NodeState getState() const;
+    Position getPosition() const;
+    Node* getParent() const;
+    NodeType getType() const;
+    char getChar() const;
+    int getCostToEnd() const { return cost_to_end_; }
+    int getWeight() const { return weight_; }
+    int getPathWeight() const { return path_weight_; }
 
     // SETTERS
     void setState(NodeState new_state);
