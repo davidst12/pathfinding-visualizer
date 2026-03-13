@@ -1,16 +1,34 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "build",
-        "type": "shell",
-        "command": "cmake --build build",
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
-        "problemMatcher": ["$gcc"],
-        "detail": "Compila el proyecto usando CMake."
-      }
-    ]
-  }
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake --build build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Compila el proyecto usando CMake."
+    },
+    {
+      "label": "Run App (SFML Visualization)",
+      "type": "shell",
+      "command": " ./build/PathfindingApp -s",
+      "detail": "Run app using sfml visualization"
+    },
+    {
+      "label": "Run App (Terminal Visualization)",
+      "type": "shell",
+      "command": " ./build/PathfindingApp -t",
+      "detail": "Run app using terminal visualization"
+    },
+    {
+      "label": "Run Test",
+      "type": "shell",
+      "command": "echo 'Not implemented yet'",
+      "detail": "Run app using terminal visualization"
+    }
+  ]
+}

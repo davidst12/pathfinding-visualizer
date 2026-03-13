@@ -4,4 +4,5 @@
 *.exe
 *.out
 *.log
+*.profraw
 .DS_Store
