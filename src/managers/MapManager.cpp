@@ -38,7 +38,6 @@ void MapManager::loadMap(const std::string& filePath) {
 
     std::vector<std::string> grid_string;
     
-    // Asumiendo que tu Grid tiene un método para setear el tipo de nodo
     for (int y = 0; y < height; ++y) {
         grid_string.push_back(data["data"][y]);
     }

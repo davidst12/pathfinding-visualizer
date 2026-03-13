@@ -8,20 +8,21 @@
 #include "Pathfinding/app/AppState.hpp"
 #include "Pathfinding/app/AppStateEvent.hpp"
 #include "Pathfinding/visualization/ScreenResult.hpp"
-#include "Pathfinding/visualization/SelectionText.hpp"
+#include "Pathfinding/visualization/sfml/SelectionText.hpp"
+#include "Pathfinding/visualization/IVisualization.hpp"
 
-class Visualization
+class SfmlVisualization : public IVisualization
 {
 public:       
 
-    Visualization();
+    SfmlVisualization();
 
-    BasicScreenResult        displayHome();
-    TestModeSelectionResult  displayTestModeSelectionScreen();
-    AlgorithmSelectionResult displayAlgorithmSelectionScreen(bool allow_multiple_selection = false);
-    MapSelectionResult       displayMapSelectionScreen(std::map<std::string, Grid> maps);
-    ExecutionSelectionResult displayExecutionSelectionScreen();
-    BasicScreenResult        displaySimulationScreen(std::vector<AlgorithmResult> results, bool wait_for_input = true);
+    BasicScreenResult        displayHome() override;
+    TestModeSelectionResult  displayTestModeSelectionScreen() override;
+    AlgorithmSelectionResult displayAlgorithmSelectionScreen(bool allow_multiple_selection = false) override;
+    MapSelectionResult       displayMapSelectionScreen(std::map<std::string, Grid> maps) override;
+    ExecutionSelectionResult displayExecutionSelectionScreen() override;
+    BasicScreenResult        displaySimulationScreen(std::vector<AlgorithmResult> results, bool wait_for_input = true) override;
 
 private:
     sf::RenderWindow window;

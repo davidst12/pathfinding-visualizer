@@ -1,4 +1,4 @@
-#include "Pathfinding/visualization/Visualization.hpp"
+#include "Pathfinding/visualization/sfml/SfmlVisualization.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -6,14 +6,14 @@
 #include <iostream>
 
 
-Visualization::Visualization() {
+SfmlVisualization::SfmlVisualization() : IVisualization() {
     window = sf::RenderWindow(sf::VideoMode({800, 600}), "Pathfinding Visualizer - SFML 3");
     if (!font.openFromFile("/System/Library/Fonts/Supplemental/Arial.ttf")) {
         std::cerr << "No se pudo cargar la fuente" << std::endl;
     }
 }
 
-BasicScreenResult Visualization::displayHome() {
+BasicScreenResult SfmlVisualization::displayHome() {
 
     window = sf::RenderWindow(sf::VideoMode({static_cast<unsigned int>(800), 600}), "Pathfinding Visualizer - SFML 3");
 
@@ -63,7 +63,7 @@ BasicScreenResult Visualization::displayHome() {
     return screen_result;
 }
 
-TestModeSelectionResult Visualization::displayTestModeSelectionScreen() {
+TestModeSelectionResult SfmlVisualization::displayTestModeSelectionScreen() {
     std::string title = "Select test mode";
     std::vector<std::string> options = {"1. Single Algorithm", "2. Multiple Algorithms"};
     SelectionText optionsMenuText(title, options, font, false);
@@ -111,7 +111,7 @@ TestModeSelectionResult Visualization::displayTestModeSelectionScreen() {
     return screen_result;
 }
 
-AlgorithmSelectionResult Visualization::displayAlgorithmSelectionScreen(bool allow_multiple_selection) {
+AlgorithmSelectionResult SfmlVisualization::displayAlgorithmSelectionScreen(bool allow_multiple_selection) {
     std::string title = "Select Algorithm/s";
     std::vector<std::string> options = {"1. BFS", "2. DFS", "3. Dijkstra", "4. A*"};
     SelectionText optionsMenuText(title, options, font, allow_multiple_selection);
@@ -169,7 +169,7 @@ AlgorithmSelectionResult Visualization::displayAlgorithmSelectionScreen(bool all
     return screen_result;
 }
     
-MapSelectionResult Visualization::displayMapSelectionScreen(std::map<std::string, Grid> maps) {
+MapSelectionResult SfmlVisualization::displayMapSelectionScreen(std::map<std::string, Grid> maps) {
     std::string title = "Select Map";
     std::vector<std::string> options;
     std::vector<Grid> grids;
@@ -224,7 +224,7 @@ MapSelectionResult Visualization::displayMapSelectionScreen(std::map<std::string
     return screen_result;
 }
 
-ExecutionSelectionResult Visualization::displayExecutionSelectionScreen() {
+ExecutionSelectionResult SfmlVisualization::displayExecutionSelectionScreen() {
     std::string title = "Select Execution mode";
     std::vector<std::string> options = {"1. Fast", "2. Step by step", "3. Animated"};
     SelectionText optionsMenuText(title, options, font);
@@ -275,7 +275,7 @@ ExecutionSelectionResult Visualization::displayExecutionSelectionScreen() {
     return screen_result;
 }
 
-BasicScreenResult Visualization::displaySimulationScreen(std::vector<AlgorithmResult> result, bool wait_for_input) {
+BasicScreenResult SfmlVisualization::displaySimulationScreen(std::vector<AlgorithmResult> result, bool wait_for_input) {
 
     float new_window_width = 0;
 
@@ -332,13 +332,13 @@ BasicScreenResult Visualization::displaySimulationScreen(std::vector<AlgorithmRe
     return screen_result;
 }
 
-void Visualization::displayOptionsScreen(SelectionText& optionsMenuText) {
+void SfmlVisualization::displayOptionsScreen(SelectionText& optionsMenuText) {
     window.clear(sf::Color(30, 30, 30));
     window.draw(optionsMenuText);
     window.display();
 }
 
-sf::VertexArray Visualization::gridToVertexArray(Grid& base_grid, int algorithmIndex, bool is_algorithm_running) {
+sf::VertexArray SfmlVisualization::gridToVertexArray(Grid& base_grid, int algorithmIndex, bool is_algorithm_running) {
     int columnas = base_grid.getGridWidth();
     int filas = base_grid.getGridHeight();
     float tamanoCelda = 30.f;
@@ -382,7 +382,7 @@ sf::VertexArray Visualization::gridToVertexArray(Grid& base_grid, int algorithmI
     return grid;
 }
 
-sf::VertexArray Visualization::pathToVertexArray(AlgorithmResult result, int algorithmIndex) {
+sf::VertexArray SfmlVisualization::pathToVertexArray(AlgorithmResult result, int algorithmIndex) {
     // 6 vértices por "punto" para hacer un cuadrado con 2 triángulos
     sf::VertexArray points(sf::PrimitiveType::Triangles, result.path.size() * 6);
     
@@ -415,7 +415,7 @@ sf::VertexArray Visualization::pathToVertexArray(AlgorithmResult result, int alg
     return points;
 }
 
-sf::Color Visualization::getNodeColor(Node* node, bool is_algorithm_running) {
+sf::Color SfmlVisualization::getNodeColor(Node* node, bool is_algorithm_running) {
     if (is_algorithm_running) {
         if(node->getState() == NodeState::PROCESSED && node->getType() != NodeType::START && node->getType() != NodeType::END) {
             return sf::Color(216, 227, 16);
@@ -433,7 +433,7 @@ sf::Color Visualization::getNodeColor(Node* node, bool is_algorithm_running) {
     }
 }
 
-sf::Text Visualization::statisticsToText(AlgorithmResult result, int algorithmIndex) {
+sf::Text SfmlVisualization::statisticsToText(AlgorithmResult result, int algorithmIndex) {
     float horizontal_offset = algorithmIndex * (result.grid_resolved->getGridWidth() * 30.f + 100);
 
     sf::Text text(font);

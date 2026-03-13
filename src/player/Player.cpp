@@ -12,9 +12,10 @@ Player::Player(VisualizationType visualization_type)
     switch (visualization_type)
     {
     case VisualizationType::Terminal:
+        visualization = std::make_unique<TerminalVisualization>();
         break;
     case VisualizationType::Sfml:
-        visualization = Visualization();
+        visualization = std::make_unique<SfmlVisualization>();
         break;
     default:
         throw std::runtime_error("Invalid visualization type");
@@ -56,12 +57,12 @@ void Player::setAvailableMaps(std::map<std::string, Grid> maps) {
 
 AppStateEvent Player::handleMainMenuState()
 {
-    return visualization.displayHome().state_event;
+    return visualization->displayHome().state_event;
 }
 
 AppStateEvent Player::handleSelectTestModeMenuState()
 {
-    TestModeSelectionResult screen_result = visualization.displayTestModeSelectionScreen();
+    TestModeSelectionResult screen_result = visualization->displayTestModeSelectionScreen();
     testMode = screen_result.test_mode;
 
     return screen_result.state_event;
@@ -72,7 +73,7 @@ AppStateEvent Player::handleSelectAlgorithmMenuState()
     for (auto& algorithm : algorithms) algorithm.reset();
     algorithms.clear();
 
-    AlgorithmSelectionResult screen_result = visualization.displayAlgorithmSelectionScreen(testMode == AlgorithmTestMode::MultipleAlgorithms);
+    AlgorithmSelectionResult screen_result = visualization->displayAlgorithmSelectionScreen(testMode == AlgorithmTestMode::MultipleAlgorithms);
     for (auto option : screen_result.algorithms_selected) {
         switch (option) {
             case AlgorithmType::BFS:
@@ -98,14 +99,16 @@ AppStateEvent Player::handleSelectAlgorithmMenuState()
 AppStateEvent Player::handleSelectMapMenuState() {
     grid.reset();
 
-    MapSelectionResult screen_result = visualization.displayMapSelectionScreen(maps);
-    grid = std::make_shared<Grid>(maps[screen_result.map_name]);
+    MapSelectionResult screen_result = visualization->displayMapSelectionScreen(maps);
+    if (screen_result.state_event == AppStateEvent::Continue) {
+        grid = std::make_shared<Grid>(maps[screen_result.map_name]);
+    }
 
     return screen_result.state_event;
 }
 
 AppStateEvent Player::handleSelectExecutionMenuState() {
-    ExecutionSelectionResult screen_result = visualization.displayExecutionSelectionScreen();
+    ExecutionSelectionResult screen_result = visualization->displayExecutionSelectionScreen();
     executionMode = screen_result.execution_mode;
 
     return screen_result.state_event;
@@ -121,7 +124,7 @@ AppStateEvent Player::handlePlayingState()
 
     if (executionMode == AlgorithmExecutionMode::Instant) {
         for(auto& algorithm : algorithms) results.push_back(algorithm->solve());
-        screen_result = visualization.displaySimulationScreen(results);
+        screen_result = visualization->displaySimulationScreen(results);
     } else if (executionMode == AlgorithmExecutionMode::StepByStep) {
         bool some_algorithm_is_running = false;
         do {
@@ -132,7 +135,7 @@ AppStateEvent Player::handlePlayingState()
                 results.push_back(result);
                 if(result.state == AlgorithmState::RUNNING) some_algorithm_is_running = true;
             }
-            screen_result = visualization.displaySimulationScreen(results);
+            screen_result = visualization->displaySimulationScreen(results);
 
         } while(screen_result.state_event == AppStateEvent::Continue && some_algorithm_is_running);
     } else if (executionMode == AlgorithmExecutionMode::Animated) {
@@ -145,11 +148,11 @@ AppStateEvent Player::handlePlayingState()
                 results.push_back(result);
                 if(result.state == AlgorithmState::RUNNING) some_algorithm_is_running = true;
             }
-            screen_result = visualization.displaySimulationScreen(results, !some_algorithm_is_running);
+            screen_result = visualization->displaySimulationScreen(results, !some_algorithm_is_running);
             if(screen_result.state_event == AppStateEvent::Continue && some_algorithm_is_running) {
                 results.clear();
                 for(auto& algorithm : algorithms) results.push_back(algorithm->solve());
-                screen_result = visualization.displaySimulationScreen(results);
+                screen_result = visualization->displaySimulationScreen(results);
                 break;
             }
             if (some_algorithm_is_running) std::this_thread::sleep_for(std::chrono::milliseconds(600));

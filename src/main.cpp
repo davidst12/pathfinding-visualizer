@@ -1,20 +1,17 @@
-#include <iostream>
-#include <string>
-#include <vector>
-
-#include "Pathfinding/core/Grid.hpp"
-#include "Pathfinding/algorithms/BFS.hpp"
-#include "Pathfinding/algorithms/DFS.hpp"
-#include "Pathfinding/algorithms/Dijkstra.hpp"
-#include "Pathfinding/algorithms/AStar.hpp"
-#include "Pathfinding/visualization/Visualization.hpp"
-
 #include "Pathfinding/app/App.hpp"
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    VisualizationType mode = VisualizationType::Terminal;
+    if (argc > 1) {
+        std::string arg = argv[1];
+        if (arg == "--sfml" || arg == "-s") {
+            mode = VisualizationType::Sfml;
+        }
+    }
 
     App app;
-    app.run();
+    app.run(mode);
 
    return 0;
 }

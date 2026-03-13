@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Pathfinding/visualization/Visualization.hpp"
+#include "Pathfinding/visualization/sfml/SfmlVisualization.hpp"
+#include "Pathfinding/visualization/terminal/TerminalVisualization.hpp"
 #include "Pathfinding/app/AppState.hpp"
 #include "Pathfinding/visualization/VisualizationType.hpp"
 #include "Pathfinding/algorithms/BFS.hpp"
@@ -17,7 +18,7 @@ public:
     void init();
 
 private:
-    Visualization visualization;
+    std::unique_ptr<IVisualization> visualization;
     std::vector<std::unique_ptr<IAlgorithm>> algorithms;
     std::map<std::string, Grid> maps;
     std::shared_ptr<Grid> grid;

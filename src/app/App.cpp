@@ -1,18 +1,20 @@
 #include "Pathfinding/app/App.hpp"
 
-App::App() : player(VisualizationType::Sfml) {}
+App::App() {}
 
-void App::run() {
+void App::run(VisualizationType visualizationType) {
 
     appState = AppState::MainMenu;
     AppStateEvent event;
 
+    player = std::make_unique<Player>(visualizationType);
+
     MapManager mapManager;
     mapManager.loadAllMaps("assets/");
-    player.setAvailableMaps(mapManager.getAllMaps());
+    player->setAvailableMaps(mapManager.getAllMaps());
 
     while(true) {
-        event = player.processAppState(appState);
+        event = player->processAppState(appState);
         processAppStateEvent(event);
         
         if (appState == AppState::Exit) {

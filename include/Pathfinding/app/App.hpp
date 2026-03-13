@@ -10,10 +10,10 @@ class App
 public:
     App();    
 
-    void run();
+    void run(VisualizationType visualizationType);
 
 private:
-    Player player;
+    std::unique_ptr<Player> player;
     AppState appState;
     MapManager mapManager;
 
