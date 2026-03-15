@@ -6,8 +6,9 @@
 
 TEST(AlgorithmResultTest, ResultRoStringTest) {
     AStar a_star;
-    Grid g(grid1);
+    Grid g("grid1", grid1);
     
+    std::string algorithm_string_expected = "Algorithm: A*\n";
     std::string state_string_expected = "State: PATH_FOUND\n";
     std::string nodes_proc_string_expected = "Nodes processed count: 4 (4)\n";
     std::string nodes_ratio_string_expected = "Nodes processed ratio: 100.000000% \n";
@@ -15,7 +16,8 @@ TEST(AlgorithmResultTest, ResultRoStringTest) {
     std::string path_size_string_expected = "Path size: 4\n";
     std::string cost_string_expected = "Cost: 2\n";
     
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_TRUE(a_star_result.toString().contains(state_string_expected));
     EXPECT_TRUE(a_star_result.toString().contains(nodes_proc_string_expected));

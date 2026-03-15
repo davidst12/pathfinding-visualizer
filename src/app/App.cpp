@@ -10,7 +10,7 @@ void App::run(VisualizationType visualizationType) {
     player = std::make_unique<Player>(visualizationType);
 
     MapManager mapManager;
-    mapManager.loadAllMaps("assets/");
+    mapManager.loadAllMaps("assets/maps/");
     player->setAvailableMaps(mapManager.getAllMaps());
 
     while(true) {

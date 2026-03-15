@@ -8,7 +8,7 @@
 
 SfmlVisualization::SfmlVisualization() : IVisualization() {
     window = sf::RenderWindow(sf::VideoMode({800, 600}), "Pathfinding Visualizer - SFML 3");
-    if (!font.openFromFile("/System/Library/Fonts/Supplemental/Arial.ttf")) {
+    if (!font.openFromFile("assets/fonts/LiberationSans-Regular.ttf")) {
         std::cerr << "No se pudo cargar la fuente" << std::endl;
     }
 }

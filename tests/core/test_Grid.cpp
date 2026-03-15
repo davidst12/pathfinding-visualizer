@@ -10,7 +10,7 @@ const std::vector<std::string> grid =
     };
 
 TEST(GridTest, TestGridDimensionsAndNodeCounts) {
-    Grid g(grid);
+    Grid g("grid", grid);
 
     EXPECT_EQ(g.getGridWidth(), 4);
     EXPECT_EQ(g.getGridHeight(), 4);
@@ -19,7 +19,7 @@ TEST(GridTest, TestGridDimensionsAndNodeCounts) {
 }
 
 TEST(GridTest, TestGridSpecialNodes) {
-    Grid g(grid);
+    Grid g("grid", grid);
 
     Node* startNode = g.startNode_;
     Node* endNode = g.endNode_;
@@ -29,7 +29,7 @@ TEST(GridTest, TestGridSpecialNodes) {
 }
 
 TEST(GridTest, TestGridNodesPositionValidity) {
-    Grid g(grid);
+    Grid g("grid", grid);
     Position validPos(1, 1);
     Position invalidPos(-1, 0);
 
@@ -41,7 +41,7 @@ TEST(GridTest, TestGridNodesPositionValidity) {
 }
 
 TEST(GridTest, TestGridNodesGetters) {
-    Grid g(grid);
+    Grid g("grid", grid);
     Position waterPos(2, 1);
     Position emptyPos(1, 2);
 
@@ -53,7 +53,7 @@ TEST(GridTest, TestGridNodesGetters) {
 }
 
 TEST(GridTest, TestGridToString) {
-    Grid g(grid);
+    Grid g("grid", grid);
     std::string expectedString = "XXXX\nXSWX\nX-EX\nXXXX\n";
 
     std::string resultString = g.toString();
@@ -62,7 +62,7 @@ TEST(GridTest, TestGridToString) {
 }
 
 TEST(GridTest, TestGridToStringWithPath) {
-    Grid g(grid);
+    Grid g("grid", grid);
     std::vector<Node> path = { *g.getNodeFromPosition(Position(1, 1)), *g.getNodeFromPosition(Position(1, 2)), *g.getNodeFromPosition(Position(2, 2)) };
     std::string expectedString = "XXXX\nXSWX\nX+EX\nXXXX\n";
 

@@ -13,21 +13,32 @@
       "detail": "Compila el proyecto usando CMake."
     },
     {
+      "label": "Clean build",
+      "type": "shell",
+      "command": "rm -rf build/* && cmake -B build -S . && cmake --build build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Compila el proyecto usando CMake."
+    },
+    {
       "label": "Run App (SFML Visualization)",
       "type": "shell",
-      "command": " ./build/PathfindingApp -s",
+      "command": "./build/PathfindingApp -s",
       "detail": "Run app using sfml visualization"
     },
     {
       "label": "Run App (Terminal Visualization)",
       "type": "shell",
-      "command": " ./build/PathfindingApp -t",
+      "command": "./build/PathfindingApp -t",
       "detail": "Run app using terminal visualization"
     },
     {
       "label": "Run Test",
       "type": "shell",
-      "command": "echo 'Not implemented yet'",
+      "command": "./build/tests/ejecutar_tests",
       "detail": "Run app using terminal visualization"
     }
   ]

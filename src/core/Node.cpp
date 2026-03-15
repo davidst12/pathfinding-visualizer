@@ -1,5 +1,6 @@
 #include "Pathfinding/core/Node.hpp"
 
+#include <climits>
 #include<iostream>
 
 Node::Node(Position position, NodeType type)

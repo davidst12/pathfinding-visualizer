@@ -1,5 +1,5 @@
 # 1. Buscar GTest instalado en el sistema
-find_package(GTest REQUIRED)
+# find_package(GTest REQUIRED)
 
 # 2. Crear el ejecutable de test con todos sus .cpp
 file(GLOB TEST_SOURCES "*.cpp" "core/*.cpp" "algorithms/*.cpp" "algorithms/*.hpp")

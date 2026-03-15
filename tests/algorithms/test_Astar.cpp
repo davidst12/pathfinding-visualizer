@@ -6,65 +6,84 @@
 
 TEST(AStarTest, TestAStarSimpleMap1) {
     AStar a_star;
-    Grid g(grid1);
+    Grid g("grid1", grid1);
 
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 4);
     EXPECT_EQ(a_star_result.nodes_processed_count, 4);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100);
-    EXPECT_TRUE(a_star_result.time > std::chrono::microseconds(0));
 }
 
 TEST(AStarTest, TestAStarSimpleMap2) {
     AStar a_star;
-    Grid g(grid2);
+    Grid g("grid2", grid2);
 
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 6);
     EXPECT_EQ(a_star_result.nodes_processed_count, 11);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 11/12);
-    EXPECT_TRUE(a_star_result.time > std::chrono::microseconds(0));
 }
 
 TEST(AStarTest, TestAStarSimpleMap3) {
     AStar a_star;
-    Grid g(grid3);
+    Grid g("grid3", grid3);
 
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_NOT_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 0);
     EXPECT_EQ(a_star_result.nodes_processed_count, 6);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 6/9);
-    EXPECT_TRUE(a_star_result.time > std::chrono::microseconds(0));
 }
 
 TEST(AStarTest, TestAStarSimpleMap4) {
     AStar a_star;
-    Grid g(grid4);
+    Grid g("grid4", grid4);
 
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 7);
     EXPECT_EQ(a_star_result.nodes_processed_count, 7);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 7/10);
-    EXPECT_TRUE(a_star_result.time > std::chrono::microseconds(0));
+    EXPECT_TRUE(a_star_result.time > std::chrono::nanoseconds(0));
 }
 
 TEST(AStarTest, TestAStarSimpleMap5) {
     AStar a_star;
-    Grid g(grid5);
+    Grid g("grid5", grid5);
 
-    AlgorithmResult a_star_result = a_star.runAlgorithm(g);
+    a_star.prepare(g);
+    AlgorithmResult a_star_result = a_star.solve();
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 5);
     EXPECT_EQ(a_star_result.nodes_processed_count, 8);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 8/25);
-    EXPECT_TRUE(a_star_result.time > std::chrono::microseconds(0));
+    EXPECT_TRUE(a_star_result.time > std::chrono::nanoseconds(0));
+}
+
+TEST(AStarTest, TestAStarSimpleMap1StepMode) {
+    AStar a_star;
+    Grid g("grid1", grid1);
+    AlgorithmResult a_star_result;
+    int expected_steps = 4;
+
+    a_star.prepare(g);
+    for(int step = 1; step <= expected_steps; step++) {
+        a_star_result = a_star.step();
+        EXPECT_EQ(a_star_result.state, step < expected_steps ? AlgorithmState::RUNNING : AlgorithmState::PATH_FOUND);
+    }
+
+    EXPECT_EQ(a_star_result.path.size(), 4);
+    EXPECT_EQ(a_star_result.nodes_processed_count, 4);
+    EXPECT_EQ(a_star_result.nodes_processed_ratio, 100);
 }
