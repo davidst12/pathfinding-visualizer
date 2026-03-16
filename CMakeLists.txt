@@ -7,6 +7,12 @@ project(PathfindingVisualizer VERSION 1.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(ENABLE_COVERAGE)
+    # Estos flags son los que necesita GCC para generar la telemetría de código
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
 ##### External libraries #####
 
 include(FetchContent)

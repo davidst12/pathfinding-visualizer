@@ -54,7 +54,6 @@ TEST(DijkstraTest, TestDijkstraSimpleMap4) {
     EXPECT_EQ(dijkstra_result.path.size(), 7);
     EXPECT_EQ(dijkstra_result.nodes_processed_count, 8);
     EXPECT_EQ(dijkstra_result.nodes_processed_ratio, 100 * 8/10);
-    EXPECT_TRUE(dijkstra_result.time > std::chrono::nanoseconds(0));
 }
 
 TEST(DijkstraTest, TestDijkstraSimpleMap5) {

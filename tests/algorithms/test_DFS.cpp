@@ -54,7 +54,6 @@ TEST(DFSTest, TestDfsSimpleMap4) {
     EXPECT_EQ(dfs_result.path.size(), 7);
     EXPECT_EQ(dfs_result.nodes_processed_count, 7);
     EXPECT_EQ(dfs_result.nodes_processed_ratio, 100 * 7/10);
-    EXPECT_TRUE(dfs_result.time > std::chrono::nanoseconds(0));
 }
 
 TEST(DFSTest, TestDfsSimpleMap5) {

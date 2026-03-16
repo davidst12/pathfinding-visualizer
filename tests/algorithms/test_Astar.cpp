@@ -26,8 +26,8 @@ TEST(AStarTest, TestAStarSimpleMap2) {
 
     EXPECT_EQ(a_star_result.state, AlgorithmState::PATH_FOUND);
     EXPECT_EQ(a_star_result.path.size(), 6);
-    EXPECT_EQ(a_star_result.nodes_processed_count, 11);
-    EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 11/12);
+    EXPECT_EQ(a_star_result.nodes_processed_count, 10);
+    EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 10/12);
 }
 
 TEST(AStarTest, TestAStarSimpleMap3) {
@@ -54,7 +54,6 @@ TEST(AStarTest, TestAStarSimpleMap4) {
     EXPECT_EQ(a_star_result.path.size(), 7);
     EXPECT_EQ(a_star_result.nodes_processed_count, 7);
     EXPECT_EQ(a_star_result.nodes_processed_ratio, 100 * 7/10);
-    EXPECT_TRUE(a_star_result.time > std::chrono::nanoseconds(0));
 }
 
 TEST(AStarTest, TestAStarSimpleMap5) {

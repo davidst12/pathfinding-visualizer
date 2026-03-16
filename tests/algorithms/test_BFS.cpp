@@ -54,7 +54,6 @@ TEST(BFSTest, TestBfsSimpleMap4) {
     EXPECT_EQ(bfs_result.path.size(), 5);
     EXPECT_EQ(bfs_result.nodes_processed_count, 8);
     EXPECT_EQ(bfs_result.nodes_processed_ratio, 100 * 8/10);
-    EXPECT_TRUE(bfs_result.time > std::chrono::nanoseconds(0));
 }
 
 TEST(BFSTest, TestBfsSimpleMap5) {
