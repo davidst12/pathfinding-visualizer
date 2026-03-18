@@ -4,7 +4,7 @@ project(PathfindingVisualizer VERSION 1.0 LANGUAGES C CXX)
 ##### Compilation #####
 
 # set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(ENABLE_COVERAGE)
@@ -45,6 +45,8 @@ FetchContent_Declare(
 # Opciones para que SFML no compile cosas innecesarias (ejemplos)
 set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
+set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
+set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(sfml)
 
 # Recogemos todos los .cpp de la lógica (excepto el main.cpp)

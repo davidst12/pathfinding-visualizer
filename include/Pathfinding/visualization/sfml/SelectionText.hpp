@@ -60,20 +60,20 @@ public:
     // Return TRUE if user's pressed <Continue>, FALSE otherwise
     inline bool pressedEnter() {
         if(!multiple_selection_allowed) {
-            oprions_selected.clear();
-            oprions_selected.emplace(cursor_index);
+            options_selected.clear();
+            options_selected.emplace(cursor_index);
             return true;
         } else {
             if (cursor_index == options_count) {   // Cursor is on "Continue"
-                return !oprions_selected.empty();  // True if at least one option is selected, False otherwise
+                return !options_selected.empty();  // True if at least one option is selected, False otherwise
             }
-            if(oprions_selected.contains(cursor_index)) {
-                oprions_selected.erase(cursor_index);
+            if(options_selected.count(cursor_index)) {
+                options_selected.erase(cursor_index);
             } else {
-                oprions_selected.emplace(cursor_index);
+                options_selected.emplace(cursor_index);
             }
             for (size_t i = 1; i <= options_count; ++i) {
-                if (oprions_selected.contains(i)) {
+                if (options_selected.count(i)) {
                     texts[i].setStyle(sf::Text::Underlined | sf::Text::Bold);
                 } else {
                     texts[i].setStyle(sf::Text::Bold);
@@ -84,7 +84,7 @@ public:
     }
 
     inline std::set<int> getSelectedOptions() const {
-        return oprions_selected;
+        return options_selected;
     }
 
     inline int getSelectedOption() const {
@@ -103,5 +103,5 @@ private:
     int options_count = 0;
     bool multiple_selection_allowed;
     int cursor_index = 1;
-    std::set<int> oprions_selected = {};
+    std::set<int> options_selected = {};
 };

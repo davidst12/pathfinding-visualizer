@@ -19,10 +19,10 @@ TEST(AlgorithmResultTest, ResultRoStringTest) {
     a_star.prepare(g);
     AlgorithmResult a_star_result = a_star.solve();
 
-    EXPECT_TRUE(a_star_result.toString().contains(state_string_expected));
-    EXPECT_TRUE(a_star_result.toString().contains(nodes_proc_string_expected));
-    EXPECT_TRUE(a_star_result.toString().contains(nodes_ratio_string_expected));
-    EXPECT_TRUE(a_star_result.toString().contains(time_string_expected));
-    EXPECT_TRUE(a_star_result.toString().contains(path_size_string_expected));
-    EXPECT_TRUE(a_star_result.toString().contains(cost_string_expected));
+    EXPECT_TRUE(a_star_result.toString().find(state_string_expected) != std::string::npos);
+    EXPECT_TRUE(a_star_result.toString().find(nodes_proc_string_expected) != std::string::npos);
+    EXPECT_TRUE(a_star_result.toString().find(nodes_ratio_string_expected) != std::string::npos);
+    EXPECT_TRUE(a_star_result.toString().find(time_string_expected) != std::string::npos);
+    EXPECT_TRUE(a_star_result.toString().find(path_size_string_expected) != std::string::npos);
+    EXPECT_TRUE(a_star_result.toString().find(cost_string_expected) != std::string::npos);
 }
