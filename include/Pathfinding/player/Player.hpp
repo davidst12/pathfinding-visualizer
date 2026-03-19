@@ -6,16 +6,15 @@
 #include "Pathfinding/visualization/VisualizationType.hpp"
 #include "Pathfinding/algorithms/BFS.hpp"
 #include "Pathfinding/app/AppStateEvent.hpp"
+#include "Pathfinding/player/IPlayer.hpp"
 
-class Player
+class Player : public IPlayer
 {
 public: 
-    Player(VisualizationType visualization_type);
+    Player(std::unique_ptr<IVisualization> visualization);
 
-    AppStateEvent processAppState(AppState state);
-    void setAvailableMaps(std::map<std::string, Grid> maps);
-
-    void init();
+    AppStateEvent processAppState(AppState state) override;
+    void setAvailableMaps(std::map<std::string, Grid> maps) override;
 
 private:
     std::unique_ptr<IVisualization> visualization;

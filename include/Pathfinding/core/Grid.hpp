@@ -47,4 +47,8 @@ public:
 
     bool checkPositionValidity(Position pos) const;
 
+    inline bool operator==(const Grid& other) const {
+        return grid_info_.name_ == other.getName();
+    }
+
 };

@@ -1,17 +1,16 @@
 #include "Pathfinding/app/App.hpp"
 
-App::App() {}
+App::App(std::unique_ptr<IPlayer> player, std::unique_ptr<IMapManager> map_manager)
+    : player(std::move(player))
+    , mapManager(std::move(map_manager)) {}
 
-void App::run(VisualizationType visualizationType) {
+void App::run() {
 
     appState = AppState::MainMenu;
     AppStateEvent event;
 
-    player = std::make_unique<Player>(visualizationType);
-
-    MapManager mapManager;
-    mapManager.loadAllMaps("assets/maps/");
-    player->setAvailableMaps(mapManager.getAllMaps());
+    mapManager->loadAllMaps("assets/maps/");
+    player->setAvailableMaps(mapManager->getAllMaps());
 
     while(true) {
         event = player->processAppState(appState);
