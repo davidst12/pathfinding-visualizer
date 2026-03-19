@@ -8,9 +8,6 @@
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
-MapManager::MapManager()
-{
-}
 
 void MapManager::loadAllMaps(const std::string& folderPath) {
     if (!fs::exists(folderPath)) {

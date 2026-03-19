@@ -4,7 +4,7 @@
 #include "Pathfinding/algorithms/AStar.hpp"
 #include "utils_Grids.hpp"
 
-TEST(AlgorithmResultTest, ResultRoStringTest) {
+TEST(AlgorithmResultTest, ResultToStringTest) {
     AStar a_star;
     Grid g("grid1", grid1);
     
@@ -25,4 +25,17 @@ TEST(AlgorithmResultTest, ResultRoStringTest) {
     EXPECT_TRUE(a_star_result.toString().find(time_string_expected) != std::string::npos);
     EXPECT_TRUE(a_star_result.toString().find(path_size_string_expected) != std::string::npos);
     EXPECT_TRUE(a_star_result.toString().find(cost_string_expected) != std::string::npos);
+}
+
+TEST(AlgorithmResultTest, ToStringTest) {
+    EXPECT_EQ("IDLE", state_to_string(AlgorithmState::IDLE));
+    EXPECT_EQ("READY", state_to_string(AlgorithmState::READY));
+    EXPECT_EQ("RUNNING", state_to_string(AlgorithmState::RUNNING));
+    EXPECT_EQ("PATH_FOUND", state_to_string(AlgorithmState::PATH_FOUND));
+    EXPECT_EQ("PATH_NOT_FOUND", state_to_string(AlgorithmState::PATH_NOT_FOUND));
+
+    EXPECT_EQ("Dijkstra", algorithm_type_to_string(AlgorithmType::Dijkstra));
+    EXPECT_EQ("BFS", algorithm_type_to_string(AlgorithmType::BFS));
+    EXPECT_EQ("DFS", algorithm_type_to_string(AlgorithmType::DFS));
+    EXPECT_EQ("A*", algorithm_type_to_string(AlgorithmType::AStar));
 }

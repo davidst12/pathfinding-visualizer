@@ -1,4 +1,7 @@
 #include <gtest/gtest.h>
+
+#include <climits>
+
 #include "Pathfinding/core/Node.hpp"
 #include "Pathfinding/core/Position.hpp"
 

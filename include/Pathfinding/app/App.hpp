@@ -8,14 +8,14 @@
 class App
 {
 public:
-    App();    
+    App(std::unique_ptr<IPlayer> player, std::unique_ptr<IMapManager> map_manager);    
 
-    void run(VisualizationType visualizationType);
+    void run();
 
 private:
-    std::unique_ptr<Player> player;
+    std::unique_ptr<IPlayer> player;
+    std::unique_ptr<IMapManager> mapManager;
     AppState appState;
-    MapManager mapManager;
 
     void processAppStateEvent(AppStateEvent event);
 };

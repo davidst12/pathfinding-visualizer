@@ -7,20 +7,8 @@
 #include "Pathfinding/algorithms/Dijkstra.hpp"
 #include "Pathfinding/algorithms/AStar.hpp"
 
-Player::Player(VisualizationType visualization_type)
-{
-    switch (visualization_type)
-    {
-    case VisualizationType::Terminal:
-        visualization = std::make_unique<TerminalVisualization>();
-        break;
-    case VisualizationType::Sfml:
-        visualization = std::make_unique<SfmlVisualization>();
-        break;
-    default:
-        throw std::runtime_error("Invalid visualization type");
-    }
-}
+Player::Player(std::unique_ptr<IVisualization> visualization)
+    : visualization(std::move(visualization)) {}
 
 AppStateEvent Player::processAppState(AppState state)
 {
@@ -47,7 +35,8 @@ AppStateEvent Player::processAppState(AppState state)
         event = handlePlayingState();
         break;
     case AppState::Exit:
-            break;
+        event = AppStateEvent::Exit;
+        break;
     }
 
     return event;
