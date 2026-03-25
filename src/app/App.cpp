@@ -1,75 +1,74 @@
 #include "Pathfinding/app/App.hpp"
 
 App::App(std::unique_ptr<IPlayer> player, std::unique_ptr<IMapManager> map_manager)
-    : player(std::move(player))
-    , mapManager(std::move(map_manager)) {}
+    : m_player(std::move(player)),
+      m_map_manager(std::move(map_manager)),
+      m_app_state(AppState::kMainMenu) {}
 
 void App::run() {
+    AppStateEvent event = AppStateEvent::kUnhandled;
 
-    appState = AppState::MainMenu;
-    AppStateEvent event;
+    m_map_manager->loadAllMaps("assets/maps/");
+    m_player->setAvailableMaps(m_map_manager->getAllMaps());
 
-    mapManager->loadAllMaps("assets/maps/");
-    player->setAvailableMaps(mapManager->getAllMaps());
-
-    while(true) {
-        event = player->processAppState(appState);
+    while (true) {
+        event = m_player->processAppState(m_app_state);
         processAppStateEvent(event);
-        
-        if (appState == AppState::Exit) {
+
+        if (m_app_state == AppState::kExit) {
             break;
         }
     }
 }
 
 void App::processAppStateEvent(AppStateEvent event) {
-    if(event == AppStateEvent::Exit) {
-        appState = AppState::Exit;
+    if (event == AppStateEvent::kExit) {
+        m_app_state = AppState::kExit;
         return;
-    } else if (event == AppStateEvent::Continue) {
-        switch(appState) {
-            case AppState::MainMenu:
-                appState = AppState::SelectTestModeMenu;
+    } else if (event == AppStateEvent::kContinue) {
+        switch (m_app_state) {
+            case AppState::kMainMenu:
+                m_app_state = AppState::kSelectTestModeMenu;
                 break;
-            case AppState::SelectTestModeMenu:
-                appState = AppState::SelectAlgorithmMenu;
+            case AppState::kSelectTestModeMenu:
+                m_app_state = AppState::kSelectAlgorithmMenu;
                 break;
-            case AppState::SelectAlgorithmMenu:
-                appState = AppState::SelectMapMenu;
+            case AppState::kSelectAlgorithmMenu:
+                m_app_state = AppState::kSelectMapMenu;
                 break;
-            case AppState::SelectMapMenu:
-                appState = AppState::SelectExecutionMenu;
+            case AppState::kSelectMapMenu:
+                m_app_state = AppState::kSelectExecutionMenu;
                 break;
-            case AppState::SelectExecutionMenu:
-                appState = AppState::Playing;
+            case AppState::kSelectExecutionMenu:
+                m_app_state = AppState::kPlaying;
                 break;
-            case AppState::Playing:
-                appState = AppState::MainMenu;
+            case AppState::kPlaying:
+                m_app_state = AppState::kMainMenu;
                 break;
-            case AppState::Exit:
+            case AppState::kExit:
                 break;
         }
-    } else if(event == AppStateEvent::Back) {
-        switch(appState) {
-            case AppState::MainMenu:
-                appState = AppState::Exit;
+    } else if (event == AppStateEvent::kBack) {
+        switch (m_app_state) {
+            case AppState::kMainMenu:
+                m_app_state = AppState::kExit;
                 break;
-            case AppState::SelectTestModeMenu:
-                appState = AppState::MainMenu;
+            case AppState::kSelectTestModeMenu:
+                m_app_state = AppState::kMainMenu;
                 break;
-            case AppState::SelectAlgorithmMenu:
-                appState = AppState::SelectTestModeMenu;
+            case AppState::kSelectAlgorithmMenu:
+                m_app_state = AppState::kSelectTestModeMenu;
                 break;
-            case AppState::SelectMapMenu:
-                appState = AppState::SelectAlgorithmMenu;
+            case AppState::kSelectMapMenu:
+                m_app_state = AppState::kSelectAlgorithmMenu;
                 break;
-            case AppState::SelectExecutionMenu:
-                appState = AppState::SelectMapMenu;
+            case AppState::kSelectExecutionMenu:
+                m_app_state = AppState::kSelectMapMenu;
                 break;
-            case AppState::Playing:
-                appState = AppState::SelectExecutionMenu;
+            case AppState::kPlaying:
+                m_app_state = AppState::kSelectExecutionMenu;
                 break;
-            case AppState::Exit:
+            case AppState::kExit:
                 break;
         }
     }

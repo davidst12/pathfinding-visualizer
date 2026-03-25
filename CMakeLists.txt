@@ -6,6 +6,7 @@ project(PathfindingVisualizer VERSION 1.0 LANGUAGES C CXX)
 # set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(ENABLE_COVERAGE)
     # Estos flags son los que necesita GCC para generar la telemetría de código

@@ -1,9 +1,10 @@
 #pragma once
 
-enum class AppStateEvent
-{
-    Unhandled,
-    Continue,
-    Back,
-    Exit,
+#include <cstdint>
+
+enum class AppStateEvent : std::int8_t {
+    kUnhandled,
+    kContinue,
+    kBack,
+    kExit,
 };

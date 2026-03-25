@@ -1,15 +1,13 @@
 #pragma once
 
-#include "Pathfinding/algorithms/IAlgorithm.hpp"
-
+#include <chrono>
 #include <stack>
 #include <vector>
-#include <chrono>
 
-class DFS : public IAlgorithm
-{
-public:
+#include "Pathfinding/algorithms/IAlgorithm.hpp"
 
+class DFS : public IAlgorithm {
+   public:
     DFS();
 
     bool prepare(Grid& grid) override;
@@ -17,9 +15,9 @@ public:
     AlgorithmResult step() override;
 
     ~DFS() override = default;
-    
-private:    
-    std::stack<Node*> nodes_to_process_stack_; ///< Pila de nodos a procesar durante el algoritmo.
+
+   private:
+    std::stack<Node*> m_nodes_to_process_stack;  ///< Pila de nodos a procesar durante el algoritmo.
 
     void resetAlgorithm(Grid& grid) override;
 

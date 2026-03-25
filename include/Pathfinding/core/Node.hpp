@@ -1,53 +1,62 @@
 #pragma once
 
+#include <cstdint>
+
 #include "Pathfinding/core/Position.hpp"
 
-enum class NodeState {
-    UNDISCOVERED,
-    DISCOVERED,
-    PROCESSED
-};
+enum class NodeState : std::uint8_t { kUndiscovered, kDiscovered, kProcessed };
 
-enum class NodeType {
-    EMPTY,  // Nodo vacío, donde se puede caminar
-    WALL,   // Nodo muro, donde no se puede caminar
-    START,  // Nodo de inicio
-    END,    // Nodo de fin
-    ROAD,   // Nodo camino
-    GRASS,  // Nodo césped, terreno con mayor coste de movimiento
-    WATER   // Nodo agua, terreno con mucho mayor coste de movimiento
+enum class NodeType : std::uint8_t {
+    kEmpty,  // Nodo vacío, donde se puede caminar
+    kWall,   // Nodo muro, donde no se puede caminar
+    kStart,  // Nodo de inicio
+    kEnd,    // Nodo de fin
+    kRoad,   // Nodo camino
+    kGrass,  // Nodo césped, terreno con mayor coste de movimiento
+    kWater   // Nodo agua, terreno con mucho mayor coste de movimiento
 };
 
 constexpr int weightFromNodeType(NodeType type) {
     switch (type) {
-        case NodeType::START: return 0;
-        case NodeType::END:   return 0;
-        case NodeType::EMPTY: return 1;
-        case NodeType::ROAD:  return 1;
-        case NodeType::GRASS: return 3;
-        case NodeType::WATER: return 5;
-        case NodeType::WALL: return 100;
-        default:              return 100;
+        case NodeType::kStart:
+        case NodeType::kEnd:
+            return 0;
+        case NodeType::kEmpty:
+        case NodeType::kRoad:
+            return 1;
+        case NodeType::kGrass:
+            return 3;
+        case NodeType::kWater:
+            return 5;
+        case NodeType::kWall:
+        default:
+            return 100;
     }
 }
 
 constexpr char charFromNodeType(NodeType type) {
     switch (type) {
-        case NodeType::START: return 'S';
-        case NodeType::END:   return 'E';
-        case NodeType::EMPTY: return '-';
-        case NodeType::ROAD:  return 'R';
-        case NodeType::GRASS: return 'G';
-        case NodeType::WATER: return 'W';
-        case NodeType::WALL:  return 'X';
-        default:              return '-';
+        case NodeType::kStart:
+            return 'S';
+        case NodeType::kEnd:
+            return 'E';
+        case NodeType::kEmpty:
+            return '-';
+        case NodeType::kRoad:
+            return 'R';
+        case NodeType::kGrass:
+            return 'G';
+        case NodeType::kWater:
+            return 'W';
+        case NodeType::kWall:
+            return 'X';
+        default:
+            return '-';
     }
 }
 
-class Node
-{
-public:
-
+class Node {
+   public:
     Node(Position position, NodeType type);
 
     // GETTERS
@@ -56,26 +65,36 @@ public:
     Node* getParent() const;
     NodeType getType() const;
     char getChar() const;
-    int getCostToEnd() const { return cost_to_end_; }
-    int getWeight() const { return weight_; }
-    int getPathWeight() const { return path_weight_; }
+    int getCostToEnd() const {
+        return m_cost_to_end;
+    }
+    int getWeight() const {
+        return m_weight;
+    }
+    int getPathWeight() const {
+        return m_path_weight;
+    }
 
     // SETTERS
     void setState(NodeState new_state);
     void setPosition(Position position);
     void setParent(Node* parent);
     void setType(NodeType type);
-    void setCostToEnd(int cost) { cost_to_end_ = cost; }
-    void setPathWeight(int path_weight) { path_weight_ = path_weight; }
+    void setCostToEnd(int cost) {
+        m_cost_to_end = cost;
+    }
+    void setPathWeight(int path_weight) {
+        m_path_weight = path_weight;
+    }
 
     std::string toString();
 
-private:
-    Position  position_;
-    NodeType  type_;
-    NodeState state_;
-    Node*     parent_;
-    int       weight_;        
-    int       path_weight_;
-    int       cost_to_end_;
+   private:
+    Position m_position;
+    NodeType m_type;
+    NodeState m_state;
+    Node* m_parent;
+    int m_weight;
+    int m_path_weight;
+    int m_cost_to_end;
 };

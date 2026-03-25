@@ -9,7 +9,9 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$gcc"],
+      "problemMatcher": [
+        "$gcc"
+      ],
       "detail": "Compila el proyecto usando CMake."
     },
     {
@@ -20,14 +22,17 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$gcc"],
+      "problemMatcher": [
+        "$gcc"
+      ],
       "detail": "Compila el proyecto usando CMake."
     },
     {
       "label": "Run App (SFML Visualization)",
       "type": "shell",
       "command": "./build/PathfindingApp -s",
-      "detail": "Run app using sfml visualization"
+      "detail": "Run app using sfml visualization",
+      "problemMatcher": []
     },
     {
       "label": "Run App (Terminal Visualization)",
@@ -40,6 +45,12 @@
       "type": "shell",
       "command": "./build/tests/ejecutar_tests",
       "detail": "Run app using terminal visualization"
+    },
+    {
+      "label": "Generate code coverage",
+      "type": "shell",
+      "command": "./coverage.sh",
+      "detail": "Generate code coverage"
     }
   ]
 }

@@ -2,82 +2,78 @@
 
 #include <thread>
 
+#include "Pathfinding/algorithms/AStar.hpp"
 #include "Pathfinding/algorithms/BFS.hpp"
 #include "Pathfinding/algorithms/DFS.hpp"
 #include "Pathfinding/algorithms/Dijkstra.hpp"
-#include "Pathfinding/algorithms/AStar.hpp"
 
 Player::Player(std::unique_ptr<IVisualization> visualization)
-    : visualization(std::move(visualization)) {}
+    : m_visualization(std::move(visualization)) {}
 
-AppStateEvent Player::processAppState(AppState state)
-{
-    AppStateEvent event;
+AppStateEvent Player::processAppState(AppState state) {
+    AppStateEvent event = AppStateEvent::kUnhandled;
 
-    switch (state)
-    {
-    case AppState::MainMenu:
-        event = handleMainMenuState();
-        break;
-    case AppState::SelectTestModeMenu:
-        event = handleSelectTestModeMenuState();
-        break;
-    case AppState::SelectAlgorithmMenu:
-        event = handleSelectAlgorithmMenuState();
-        break;
-    case AppState::SelectMapMenu:
-        event = handleSelectMapMenuState();
-        break;
-    case AppState::SelectExecutionMenu:
-        event = handleSelectExecutionMenuState();
-        break;
-    case AppState::Playing:
-        event = handlePlayingState();
-        break;
-    case AppState::Exit:
-        event = AppStateEvent::Exit;
-        break;
+    switch (state) {
+        case AppState::kMainMenu:
+            event = handleMainMenuState();
+            break;
+        case AppState::kSelectTestModeMenu:
+            event = handleSelectTestModeMenuState();
+            break;
+        case AppState::kSelectAlgorithmMenu:
+            event = handleSelectAlgorithmMenuState();
+            break;
+        case AppState::kSelectMapMenu:
+            event = handleSelectMapMenuState();
+            break;
+        case AppState::kSelectExecutionMenu:
+            event = handleSelectExecutionMenuState();
+            break;
+        case AppState::kPlaying:
+            event = handlePlayingState();
+            break;
+        case AppState::kExit:
+            event = AppStateEvent::kExit;
+            break;
     }
 
     return event;
 }
 
-void Player::setAvailableMaps(std::map<std::string, Grid> maps) { 
-    this->maps = maps;
+void Player::setAvailableMaps(std::map<std::string, Grid> maps) {
+    this->m_maps = maps;
 }
 
-AppStateEvent Player::handleMainMenuState()
-{
-    return visualization->displayHome().state_event;
+AppStateEvent Player::handleMainMenuState() {
+    return m_visualization->displayHome().state_event;
 }
 
-AppStateEvent Player::handleSelectTestModeMenuState()
-{
-    TestModeSelectionResult screen_result = visualization->displayTestModeSelectionScreen();
-    testMode = screen_result.test_mode;
+AppStateEvent Player::handleSelectTestModeMenuState() {
+    TestModeSelectionResult screen_result = m_visualization->displayTestModeSelectionScreen();
+    m_test_mode = screen_result.test_mode;
 
     return screen_result.state_event;
 }
 
-AppStateEvent Player::handleSelectAlgorithmMenuState()
-{
-    for (auto& algorithm : algorithms) algorithm.reset();
-    algorithms.clear();
+AppStateEvent Player::handleSelectAlgorithmMenuState() {
+    for (auto& algorithm : m_algorithms) algorithm.reset();
+    m_algorithms.clear();
 
-    AlgorithmSelectionResult screen_result = visualization->displayAlgorithmSelectionScreen(testMode == AlgorithmTestMode::MultipleAlgorithms);
+    AlgorithmSelectionResult screen_result = m_visualization->displayAlgorithmSelectionScreen(
+        m_test_mode == AlgorithmTestMode::kMultipleAlgorithms);
     for (auto option : screen_result.algorithms_selected) {
         switch (option) {
-            case AlgorithmType::BFS:
-                algorithms.push_back(std::make_unique<BFS>());
+            case AlgorithmType::kBFS:
+                m_algorithms.push_back(std::make_unique<BFS>());
                 break;
-            case AlgorithmType::DFS:
-                algorithms.push_back(std::make_unique<DFS>());
+            case AlgorithmType::kDFS:
+                m_algorithms.push_back(std::make_unique<DFS>());
                 break;
-            case AlgorithmType::Dijkstra:
-                algorithms.push_back(std::make_unique<Dijkstra>());
+            case AlgorithmType::kDijkstra:
+                m_algorithms.push_back(std::make_unique<Dijkstra>());
                 break;
-            case AlgorithmType::AStar:
-                algorithms.push_back(std::make_unique<AStar>());
+            case AlgorithmType::kAStar:
+                m_algorithms.push_back(std::make_unique<AStar>());
                 break;
             default:
                 break;
@@ -88,67 +84,70 @@ AppStateEvent Player::handleSelectAlgorithmMenuState()
 }
 
 AppStateEvent Player::handleSelectMapMenuState() {
-    grid.reset();
+    m_grid.reset();
 
-    MapSelectionResult screen_result = visualization->displayMapSelectionScreen(maps);
-    if (screen_result.state_event == AppStateEvent::Continue) {
-        grid = std::make_shared<Grid>(maps[screen_result.map_name]);
+    MapSelectionResult screen_result = m_visualization->displayMapSelectionScreen(m_maps);
+    if (screen_result.state_event == AppStateEvent::kContinue) {
+        m_grid = std::make_shared<Grid>(m_maps[screen_result.map_name]);
     }
 
     return screen_result.state_event;
 }
 
 AppStateEvent Player::handleSelectExecutionMenuState() {
-    ExecutionSelectionResult screen_result = visualization->displayExecutionSelectionScreen();
-    executionMode = screen_result.execution_mode;
+    ExecutionSelectionResult screen_result = m_visualization->displayExecutionSelectionScreen();
+    m_execution_mode = screen_result.execution_mode;
 
     return screen_result.state_event;
 }
 
-AppStateEvent Player::handlePlayingState()
-{
+AppStateEvent Player::handlePlayingState() {
     BasicScreenResult screen_result;
 
     std::vector<AlgorithmResult> results;
 
-    for(auto& algorithm : algorithms) algorithm->prepare(*grid.get());
+    for (auto& algorithm : m_algorithms) algorithm->prepare(*m_grid.get());
 
-    if (executionMode == AlgorithmExecutionMode::Instant) {
-        for(auto& algorithm : algorithms) results.push_back(algorithm->solve());
-        screen_result = visualization->displaySimulationScreen(results);
-    } else if (executionMode == AlgorithmExecutionMode::StepByStep) {
+    if (m_execution_mode == AlgorithmExecutionMode::kInstant) {
+        for (auto& algorithm : m_algorithms) results.push_back(algorithm->solve());
+        screen_result = m_visualization->displaySimulationScreen(results);
+    } else if (m_execution_mode == AlgorithmExecutionMode::kStepByStep) {
         bool some_algorithm_is_running = false;
         do {
             results.clear();
             some_algorithm_is_running = false;
-            for(auto& algorithm : algorithms) {
+            for (auto& algorithm : m_algorithms) {
                 AlgorithmResult result = algorithm->step();
                 results.push_back(result);
-                if(result.state == AlgorithmState::RUNNING) some_algorithm_is_running = true;
+                if (result.state == AlgorithmState::kRunning) some_algorithm_is_running = true;
             }
-            screen_result = visualization->displaySimulationScreen(results);
+            screen_result = m_visualization->displaySimulationScreen(results);
 
-        } while(screen_result.state_event == AppStateEvent::Continue && some_algorithm_is_running);
-    } else if (executionMode == AlgorithmExecutionMode::Animated) {
+        } while (screen_result.state_event == AppStateEvent::kContinue &&
+                 some_algorithm_is_running);
+    } else if (m_execution_mode == AlgorithmExecutionMode::kAnimated) {
         bool some_algorithm_is_running = false;
         do {
             results.clear();
             some_algorithm_is_running = false;
-            for(auto& algorithm : algorithms) {
+            for (auto& algorithm : m_algorithms) {
                 AlgorithmResult result = algorithm->step();
                 results.push_back(result);
-                if(result.state == AlgorithmState::RUNNING) some_algorithm_is_running = true;
+                if (result.state == AlgorithmState::kRunning) some_algorithm_is_running = true;
             }
-            screen_result = visualization->displaySimulationScreen(results, !some_algorithm_is_running);
-            if(screen_result.state_event == AppStateEvent::Continue && some_algorithm_is_running) {
+            screen_result =
+                m_visualization->displaySimulationScreen(results, !some_algorithm_is_running);
+            if (screen_result.state_event == AppStateEvent::kContinue &&
+                some_algorithm_is_running) {
                 results.clear();
-                for(auto& algorithm : algorithms) results.push_back(algorithm->solve());
-                screen_result = visualization->displaySimulationScreen(results);
+                for (auto& algorithm : m_algorithms) results.push_back(algorithm->solve());
+                screen_result = m_visualization->displaySimulationScreen(results);
                 break;
             }
-            if (some_algorithm_is_running) std::this_thread::sleep_for(std::chrono::milliseconds(600));
+            if (some_algorithm_is_running)
+                std::this_thread::sleep_for(std::chrono::milliseconds(600));
 
-        } while(screen_result.state_event != AppStateEvent::Exit && some_algorithm_is_running);
+        } while (screen_result.state_event != AppStateEvent::kExit && some_algorithm_is_running);
     }
 
     return screen_result.state_event;

@@ -1,56 +1,57 @@
 #include "Pathfinding/core/Node.hpp"
 
 #include <climits>
-#include<iostream>
+#include <iostream>
 
 Node::Node(Position position, NodeType type)
-    : position_(position)
-    , type_(type)
-    , state_(NodeState::UNDISCOVERED)
-    , parent_(nullptr)
-    , cost_to_end_(INT_MAX)
-    , path_weight_(0)
-    , weight_(weightFromNodeType(type)) {}
+    : m_position(position),
+      m_type(type),
+      m_state(NodeState::kUndiscovered),
+      m_parent(nullptr),
+      m_cost_to_end(INT_MAX),
+      m_path_weight(0),
+      m_weight(weightFromNodeType(type)) {}
 
 NodeState Node::getState() const {
-    return state_;
+    return m_state;
 }
 void Node::setState(NodeState new_state) {
-    state_ = new_state;
+    m_state = new_state;
 }
 
 void Node::setPosition(Position position) {
-    position_ = position;
+    m_position = position;
 }
 
 Position Node::getPosition() const {
-    return position_;
+    return m_position;
 }
 
 Node* Node::getParent() const {
-    return parent_;
+    return m_parent;
 }
 void Node::setParent(Node* parent) {
-    parent_ = parent;
+    m_parent = parent;
 }
 
 void Node::setType(NodeType type) {
-    type_ = type;
-    weight_ = weightFromNodeType(type);
+    m_type = type;
+    m_weight = weightFromNodeType(type);
 }
 NodeType Node::getType() const {
-    return type_;
+    return m_type;
 }
 
 char Node::getChar() const {
-    return charFromNodeType(type_);
+    return charFromNodeType(m_type);
 }
 
 std::string Node::toString() {
-    std::string node_string = "";
-    node_string += "Node " + position_.to_string() + "\n";
-    node_string += "  Parent " + (parent_ != nullptr ? parent_->getPosition().to_string() : "null");
-    node_string += "  State " + std::to_string(static_cast<int>(state_));
+    std::string node_string;
+    node_string += "Node " + m_position.to_string() + "\n";
+    node_string +=
+        "  Parent " + (m_parent != nullptr ? m_parent->getPosition().to_string() : "null");
+    node_string += "  State " + std::to_string(static_cast<int>(m_state));
 
     return node_string;
 }

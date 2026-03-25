@@ -1,12 +1,13 @@
 #pragma once
 
-enum class AppState
-{
-    MainMenu,
-    SelectTestModeMenu,
-    SelectAlgorithmMenu,
-    SelectMapMenu,
-    SelectExecutionMenu,
-    Playing,
-    Exit,
+#include <cstdint>
+
+enum class AppState : std::uint8_t {
+    kMainMenu,
+    kSelectTestModeMenu,
+    kSelectAlgorithmMenu,
+    kSelectMapMenu,
+    kSelectExecutionMenu,
+    kPlaying,
+    kExit,
 };

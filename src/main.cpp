@@ -2,9 +2,9 @@
 
 std::unique_ptr<IVisualization> createVisualization(VisualizationType type) {
     switch (type) {
-        case VisualizationType::Terminal:
+        case VisualizationType::kTerminal:
             return std::make_unique<TerminalVisualization>();
-        case VisualizationType::Sfml:
+        case VisualizationType::kSfml:
             return std::make_unique<SfmlVisualization>();
         default:
             throw std::runtime_error("Invalid visualization type");
@@ -12,12 +12,11 @@ std::unique_ptr<IVisualization> createVisualization(VisualizationType type) {
 }
 
 int main(int argc, char* argv[]) {
-
-    VisualizationType mode = VisualizationType::Terminal;
+    VisualizationType mode = VisualizationType::kTerminal;
     if (argc > 1) {
         std::string arg = argv[1];
         if (arg == "--sfml" || arg == "-s") {
-            mode = VisualizationType::Sfml;
+            mode = VisualizationType::kSfml;
         }
     }
 
@@ -28,5 +27,5 @@ int main(int argc, char* argv[]) {
     App app(std::move(player), std::move(map_manager));
     app.run();
 
-   return 0;
+    return 0;
 }

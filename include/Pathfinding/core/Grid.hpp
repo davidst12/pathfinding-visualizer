@@ -1,33 +1,30 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "Pathfinding/core/Node.hpp"
 #include "Pathfinding/core/Position.hpp"
 
 struct GridInfo {
-    std::string name_;
-    int width_;              
-    int height_;             
-    int empty_nodes_count_;
-    int total_nodes_count_;
+    std::string name;
+    int width = 0;
+    int height = 0;
+    int empty_nodes_count = 0;
+    int total_nodes_count = 0;
 };
 
-class Grid
-{
-private:
+class Grid {
+   private:
+    std::vector<std::vector<Node>> m_grid;
 
-    std::vector<std::vector<Node>> grid_;
-
-public:
-
+   public:
     Grid(std::string name, std::vector<std::string> grid);
     Grid() = default;
 
-    Node* startNode_;
-    Node* endNode_;
-    GridInfo grid_info_;
+    Node* start_node;
+    Node* end_node;
+    GridInfo grid_info;
 
     std::string toString() const;
 
@@ -47,8 +44,7 @@ public:
 
     bool checkPositionValidity(Position pos) const;
 
-    inline bool operator==(const Grid& other) const {
-        return grid_info_.name_ == other.getName();
+    bool operator==(const Grid& other) const {
+        return grid_info.name == other.getName();
     }
-
 };

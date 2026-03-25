@@ -1,13 +1,9 @@
 #include <gtest/gtest.h>
+
 #include "Pathfinding/core/Grid.hpp"
 #include "Pathfinding/core/Position.hpp"
 
-const std::vector<std::string> grid =
-    { "XXXX"
-    , "XSWX"
-    , "XOEX"
-    , "XXXX"
-    };
+const std::vector<std::string> grid = {"XXXX", "XSWX", "XOEX", "XXXX"};
 
 TEST(GridTest, TestGridDimensionsAndNodeCounts) {
     Grid g("grid", grid);
@@ -21,8 +17,8 @@ TEST(GridTest, TestGridDimensionsAndNodeCounts) {
 TEST(GridTest, TestGridSpecialNodes) {
     Grid g("grid", grid);
 
-    Node* startNode = g.startNode_;
-    Node* endNode = g.endNode_;
+    Node* startNode = g.start_node;
+    Node* endNode = g.end_node;
 
     EXPECT_EQ(startNode->getPosition(), Position(1, 1));
     EXPECT_EQ(endNode->getPosition(), Position(2, 2));
@@ -48,8 +44,8 @@ TEST(GridTest, TestGridNodesGetters) {
     Node* waterNode = g.getNodeFromPosition(waterPos);
     Node* emptyNode = g.getNodeFromPosition(emptyPos);
 
-    EXPECT_EQ(waterNode->getType(), NodeType::WATER);
-    EXPECT_EQ(emptyNode->getType(), NodeType::EMPTY);
+    EXPECT_EQ(waterNode->getType(), NodeType::kWater);
+    EXPECT_EQ(emptyNode->getType(), NodeType::kEmpty);
 }
 
 TEST(GridTest, TestGridToString) {
@@ -63,7 +59,9 @@ TEST(GridTest, TestGridToString) {
 
 TEST(GridTest, TestGridToStringWithPath) {
     Grid g("grid", grid);
-    std::vector<Node> path = { *g.getNodeFromPosition(Position(1, 1)), *g.getNodeFromPosition(Position(1, 2)), *g.getNodeFromPosition(Position(2, 2)) };
+    std::vector<Node> path = {*g.getNodeFromPosition(Position(1, 1)),
+                              *g.getNodeFromPosition(Position(1, 2)),
+                              *g.getNodeFromPosition(Position(2, 2))};
     std::string expectedString = "XXXX\nXSWX\nX+EX\nXXXX\n";
 
     std::string resultString = g.toStringWithPath(path);

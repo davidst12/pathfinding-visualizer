@@ -1,7 +1,6 @@
 #pragma once
 
-enum class VisualizationType
-{
-    Terminal,
-    Sfml,
+enum class VisualizationType : std::uint8_t {
+    kTerminal,
+    kSfml,
 };

@@ -2,135 +2,137 @@
 
 #include "Pathfinding/player/AlgorithmPreparation.hpp"
 
-AStar::AStar() : IAlgorithm() {}
+AStar::AStar() {}
 
 bool AStar::prepare(Grid& grid) {
     resetAlgorithm(grid);
-    algorithmStateChange(AlgorithmState::READY);
+    algorithmStateChange(AlgorithmState::kReady);
 
     return true;
 }
 
 AlgorithmResult AStar::solve() {
-
-    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
-        return result_;
+    if (m_result.state != AlgorithmState::kRunning && m_result.state != AlgorithmState::kReady) {
+        return m_result;
     }
-    algorithmStateChange(AlgorithmState::RUNNING);
-    
+    algorithmStateChange(AlgorithmState::kRunning);
+
     auto start = std::chrono::high_resolution_clock::now();
-    
-    while(!priority_node_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+
+    while (!m_priority_node_queue.empty() && m_result.state == AlgorithmState::kRunning) {
         processNode();
     }
 
     auto stop = std::chrono::high_resolution_clock::now();
-    result_.time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    m_result.time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    if(result_.state == AlgorithmState::PATH_FOUND) {
-        result_.path = getPath();
+    if (m_result.state == AlgorithmState::kPathFound) {
+        m_result.path = getPath();
     } else {
-        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+        algorithmStateChange(AlgorithmState::kPathNotFound);
     }
     generateStatistics();
 
-    return result_;
+    return m_result;
 }
 
 AlgorithmResult AStar::step() {
-
-    if(result_.state != AlgorithmState::RUNNING && result_.state != AlgorithmState::READY) {
-        return result_;
+    if (m_result.state != AlgorithmState::kRunning && m_result.state != AlgorithmState::kReady) {
+        return m_result;
     }
-    algorithmStateChange(AlgorithmState::RUNNING);
-    if(!priority_node_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+    algorithmStateChange(AlgorithmState::kRunning);
+    if (!m_priority_node_queue.empty() && m_result.state == AlgorithmState::kRunning) {
         processNode();
     }
-    if(result_.state == AlgorithmState::PATH_FOUND) {
-        result_.path = getPath();
-    } else if(priority_node_queue_.empty()) {
-        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+    if (m_result.state == AlgorithmState::kPathFound) {
+        m_result.path = getPath();
+    } else if (m_priority_node_queue.empty()) {
+        algorithmStateChange(AlgorithmState::kPathNotFound);
     }
     generateStatistics();
 
-    return result_;
+    return m_result;
 }
 
 void AStar::resetAlgorithm(Grid& grid) {
-    result_.nodes_processed_count = 0;
-    result_.nodes_processed_ratio = 0;
-    result_.path = std::vector<Node>();
+    m_result.nodes_processed_count = 0;
+    m_result.nodes_processed_ratio = 0;
+    m_result.path = std::vector<Node>();
 
-    grid_ = grid;
-    grid_.startNode_ = grid_.getNodeFromPosition(grid_.startNode_->getPosition());
-    grid_.endNode_ = grid_.getNodeFromPosition(grid_.endNode_->getPosition());
-    grid_.startNode_->setCostToEnd(0);
+    m_grid = grid;
+    m_grid.start_node = m_grid.getNodeFromPosition(m_grid.start_node->getPosition());
+    m_grid.end_node = m_grid.getNodeFromPosition(m_grid.end_node->getPosition());
+    m_grid.start_node->setCostToEnd(0);
 
-    priority_node_queue_ = std::priority_queue<Node*, std::vector<Node*>, CompareNodes>();
-    priority_node_queue_.push(grid_.startNode_);
+    m_priority_node_queue = std::priority_queue<Node*, std::vector<Node*>, CompareNodes>();
+    m_priority_node_queue.push(m_grid.start_node);
 }
 
 void AStar::processNode() {
-    Node* current_node = priority_node_queue_.top();
-    current_node->setState(NodeState::PROCESSED);
-    result_.nodes_processed_count += 1;
+    Node* current_node = m_priority_node_queue.top();
+    current_node->setState(NodeState::kProcessed);
+    m_result.nodes_processed_count += 1;
 
-    if(current_node->getType() == NodeType::END) {
-        algorithmStateChange(AlgorithmState::PATH_FOUND);
+    if (current_node->getType() == NodeType::kEnd) {
+        algorithmStateChange(AlgorithmState::kPathFound);
         return;
     }
-    priority_node_queue_.pop();
+    m_priority_node_queue.pop();
     checkNeightbors(current_node);
 }
 
 void AStar::checkNeightbors(Node* current_node) {
-    for(int index = 0; index < 4; index++) {
-        Position neightbor_position = current_node->getPosition() + neighbors_check_order[index];
-        Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
+    for (int index = 0; index < 4; index++) {
+        Position neightbor_position =
+            current_node->getPosition() + m_neighbors_check_order.at(index);
+        Node* neightbor_node = m_grid.getNodeFromPosition(neightbor_position);
 
-        if(neightbor_node->getType() == NodeType::WALL) continue;
-        else if(neightbor_node->getState() != NodeState::UNDISCOVERED) {
+        if (neightbor_node->getType() == NodeType::kWall) {
+            continue;
+        } else if (neightbor_node->getState() != NodeState::kUndiscovered) {
             int tentative_cost = current_node->getPathWeight() + neightbor_node->getWeight();
-            if(tentative_cost >= neightbor_node->getPathWeight()) continue;
+            if (tentative_cost >= neightbor_node->getPathWeight()) continue;
         }
 
         neightbor_node->setPathWeight(current_node->getPathWeight() + neightbor_node->getWeight());
-        neightbor_node->setCostToEnd(neightbor_node->getPathWeight()
-            + heuristic(neightbor_node->getPosition(), grid_.endNode_->getPosition())
-        );
+        neightbor_node->setCostToEnd(
+            neightbor_node->getPathWeight() +
+            heuristic(neightbor_node->getPosition(), m_grid.end_node->getPosition()));
         neightbor_node->setParent(current_node);
-        neightbor_node->setState(NodeState::DISCOVERED);
-        priority_node_queue_.push(neightbor_node);
+        neightbor_node->setState(NodeState::kDiscovered);
+        m_priority_node_queue.push(neightbor_node);
     }
 }
 
 std::vector<Node> AStar::getPath() {
-    if(result_.state != AlgorithmState::PATH_FOUND) {
+    if (m_result.state != AlgorithmState::kPathFound) {
         return std::vector<Node>();
     }
     std::vector<Node> path;
-    Node* n = grid_.endNode_;
-    while (true)
-    {
-        path.push_back(*n);
-        n = n->getParent();
-        if(n == nullptr) break;
+    Node* node = m_grid.end_node;
+    while (true) {
+        path.push_back(*node);
+        node = node->getParent();
+        if (node == nullptr) {
+            break;
+        }
     }
     return path;
 }
 
 void AStar::algorithmStateChange(AlgorithmState state) {
-    if(result_.state != state) {
-        result_.state = state;
+    if (m_result.state != state) {
+        m_result.state = state;
     }
 }
 
 void AStar::generateStatistics() {
-    result_.algorithm_type = AlgorithmType::AStar;
-    result_.nodes_processed_ratio = 100 * result_.nodes_processed_count / grid_.getEmptyNodesCount();
-    result_.grid_resolved = &grid_;
+    m_result.algorithm_type = AlgorithmType::kAStar;
+    m_result.nodes_processed_ratio =
+        100 * m_result.nodes_processed_count / m_grid.getEmptyNodesCount();
+    m_result.grid_resolved = &m_grid;
 }
 
-int AStar::heuristic(Position a, Position b) {
-    return abs(a.x - b.x) + abs(a.y - b.y);
+int AStar::heuristic(Position first, Position second) {
+    return abs(first.x - second.x) + abs(first.y - second.y);
 }
