@@ -13,8 +13,8 @@ SfmlVisualization::SfmlVisualization() {
 }
 
 BasicScreenResult SfmlVisualization::displayHome() {
-    m_window = sf::RenderWindow(sf::VideoMode({static_cast<unsigned int>(800), 600}),
-                                "Pathfinding Visualizer - SFML 3");
+    m_window.create(sf::VideoMode({static_cast<unsigned int>(800), 600}),
+                    "Pathfinding Visualizer - SFML 3");
 
     sf::Text text(m_font);
     sf::Text sub_text(m_font);
@@ -291,9 +291,8 @@ BasicScreenResult SfmlVisualization::displaySimulationScreen(std::vector<Algorit
     }
 
     if (new_window_width > m_window.getView().getSize().x) {
-        m_window =
-            sf::RenderWindow(sf::VideoMode({static_cast<unsigned int>(new_window_width), 600}),
-                             "Pathfinding Visualizer - SFML 3");
+        m_window.create(sf::VideoMode({static_cast<unsigned int>(new_window_width), 600}),
+                        "Pathfinding Visualizer - SFML 3");
         // window.setSize({static_cast<unsigned int>(new_window_width), 600});
         sf::View newView(sf::FloatRect({0.f, 0.f}, {new_window_width, 600}));
         m_window.setView(newView);

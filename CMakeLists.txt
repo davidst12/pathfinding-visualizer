@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(ENABLE_COVERAGE)
-    # Estos flags son los que necesita GCC para generar la telemetría de código
     add_compile_options(--coverage -O0 -g)
     add_link_options(--coverage)
 endif()
@@ -22,9 +21,9 @@ include(FetchContent)
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        v1.15.2 # Versión estable actual
+  GIT_TAG        v1.15.2
 )
-# Forzamos que GTest use el runtime de la librería estándar de forma coherente
+
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
@@ -34,23 +33,20 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/nlohmann/json.git
   GIT_TAG        v3.11.3
 )
-# Esta librería es "header-only", así que es muy ligera de incluir
 FetchContent_MakeAvailable(json)
 
 # --- 3. SFML (Versión 3) ---
 FetchContent_Declare(
   sfml
   GIT_REPOSITORY https://github.com/SFML/SFML.git
-  GIT_TAG        3.0.0 # Asegúrate de usar el tag de la versión 3
+  GIT_TAG        3.0.0
 )
-# Opciones para que SFML no compile cosas innecesarias (ejemplos)
 set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(sfml)
 
-# Recogemos todos los .cpp de la lógica (excepto el main.cpp)
 file(GLOB_RECURSE SOURCES 
     "src/core/*.cpp"
     "src/algorithms/*.cpp"
@@ -59,7 +55,6 @@ file(GLOB_RECURSE SOURCES
     "src/player/*.cpp"
     "src/managers/*.cpp")
 
-# Creamos la librería
 add_library(PathfindingLib ${SOURCES})
 target_include_directories(PathfindingLib PUBLIC 
     include
