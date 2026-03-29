@@ -15,7 +15,9 @@ An interactive pathfinding algorithm visualizer built with C++17 and SFML 3.0. T
 * **Testing:** Google Test (GTest) && Google Mock (GMock) && GCOV (Code Coverage).
 * **Architecture:** **Strategy Design Pattern**. The algorithm logic is completely decoupled from the visualization engine, allowing for easy integration of new pathfinders. Architected is built using abstract interfaces to allow easily dependency injection and ensure high testability.
 
-## Application
+## Demo
+https://github.com/user-attachments/assets/1a9d2205-90d1-4678-97ac-5103361fc446
+
 
 ## Installation & Setup
 This project is fully optimized for VS Code. You can find the pre-configured tasks in .vscode/tasks.json. These tasks can be executed by pressing Ctrl+Shift+P -> Tasks: Run Task:
