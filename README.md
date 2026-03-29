@@ -18,7 +18,6 @@ An interactive pathfinding algorithm visualizer built with C++17 and SFML 3.0. T
 ## Demo
 https://github.com/user-attachments/assets/1a9d2205-90d1-4678-97ac-5103361fc446
 
-
 ## Installation & Setup
 This project is fully optimized for VS Code. You can find the pre-configured tasks in .vscode/tasks.json. These tasks can be executed by pressing Ctrl+Shift+P -> Tasks: Run Task:
 * **Build:** Compiles the main application.
@@ -27,6 +26,22 @@ This project is fully optimized for VS Code. You can find the pre-configured tas
 * **Run App (Terminal Visualization):** Launches the application using Terminal visualizer.
 * **Run Test:** Executes the Google Test suite and displays results in the terminal.
 * **Generate code coverage:** Runs the tests and generates an HTML report.
+
+## Navigation & Controls
+The application uses an intuitive keyboard-driven navigation system to manage different screens and algorithm states:
+* **Arrow Keys (↑ ↓ ← →):**	Navigate through menus and select algorithm options.
+* **B (Back):**	Return to the previous screen.
+* **Esc (Escape):**	Close the application.
+
+## Map Semantics
+The grid is a weighted representation of a graph where each cell's color indicates its state or cost. This allows for a clear visual distinction between different algorithms (e.g., BFS vs. Dijkstra).
+* **Start** -> Red
+* **Target** -> Magenta
+* **Wall** -> Brown
+* **Water** -> Blue
+* **Grass** -> Green
+* **Path** -> Yellow (Small Box)
+* **Visited** -> Yellow
 
 ## Extra
 * **Cross-Platform Development & Testing:** Originally engineered in a macOS environment, the application has been tested on Linux (Ubuntu 20.04) to ensure seamless performance and reliable OpenGL context handling across different operating systems.
