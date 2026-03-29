@@ -1,6 +1,8 @@
 /build
+/coverage_results
 *.o
 *.exe
 *.out
 *.log
+*.profraw
 .DS_Store

@@ -1,49 +1,31 @@
-#include <iostream>
-#include <string>
-#include <vector>
+#include "Pathfinding/app/App.hpp"
 
-#include "grid/Grid.h"
-#include "algorithms/BFS.h"
-#include "algorithms/DFS.h"
+std::unique_ptr<IVisualization> createVisualization(VisualizationType type) {
+    switch (type) {
+        case VisualizationType::kTerminal:
+            return std::make_unique<TerminalVisualization>();
+        case VisualizationType::kSfml:
+            return std::make_unique<SfmlVisualization>();
+        default:
+            throw std::runtime_error("Invalid visualization type");
+    }
+}
 
-int main() {
-    std::cout << "Pathfinding Visualizer initialized!\n" << std::endl;
+int main(int argc, char* argv[]) {
+    VisualizationType mode = VisualizationType::kTerminal;
+    if (argc > 1) {
+        std::string arg = argv[1];
+        if (arg == "--sfml" || arg == "-s") {
+            mode = VisualizationType::kSfml;
+        }
+    }
 
-    std::vector<std::string> grid =
-    { "XXXXXXXXXXXXXXXXXXXXXXXXX"
-    , "XOOOOOOOOOOOOOOXOOOOOOOOX"
-    , "XOSOOOOOOOOXOOOXOOOXOOOOX"
-    , "XXXXXXXXXXXXOOXXOOOXOOOOX"
-    , "XOOOOOOXOOOOOOOOOOOXOOOOX"
-    , "XOXXXOOXXXXXXXXXXXXXXOXXX"
-    , "XOEOXOOOOOOOOOOOOOOOOOOOX"
-    , "XXXXXXXXXXXXXXXXXXXXXXXXX"
-    };
-    /*std::vector<std::string> grid =
-    { "XXXXXXXX"
-    , "XOOOOOOX"
-    , "XOSXOOOX"
-    , "XOOXOOOX"
-    , "XXXXXOXX"
-    , "XOXOOOOX"
-    , "XOEOXOOX"
-    , "XXXXXXXX"
-    };*/
+    std::unique_ptr<IMapManager> map_manager = std::make_unique<MapManager>();
+    std::unique_ptr<IVisualization> visualization = createVisualization(mode);
+    std::unique_ptr<Player> player = std::make_unique<Player>(std::move(visualization));
 
-    Grid g(grid);
-    g.printGrid();
-    Grid g2(grid);
-    g2.printGrid();
-
-    std::cout << "----------- BFS -----------" << std::endl;
-
-    BFS bfs(g);
-    bfs.runAlgorithm();
-
-    std::cout << "----------- DFS -----------" << std::endl;
-
-    DFS dfs(g2);
-    dfs.runAlgorithm();
+    App app(std::move(player), std::move(map_manager));
+    app.run();
 
     return 0;
 }

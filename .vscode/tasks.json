@@ -1,16 +1,56 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "build",
-        "type": "shell",
-        "command": "cmake --build build",
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
-        "problemMatcher": ["$gcc"],
-        "detail": "Compila el proyecto usando CMake."
-      }
-    ]
-  }
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake --build build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "Compila el proyecto usando CMake."
+    },
+    {
+      "label": "Clean build",
+      "type": "shell",
+      "command": "rm -rf build/* && cmake -B build -S . && cmake --build build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "Compila el proyecto usando CMake."
+    },
+    {
+      "label": "Run App (SFML Visualization)",
+      "type": "shell",
+      "command": "./build/PathfindingApp -s",
+      "detail": "Run app using sfml visualization",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run App (Terminal Visualization)",
+      "type": "shell",
+      "command": "./build/PathfindingApp -t",
+      "detail": "Run app using terminal visualization"
+    },
+    {
+      "label": "Run Test",
+      "type": "shell",
+      "command": "./build/tests/ejecutar_tests",
+      "detail": "Run app using terminal visualization"
+    },
+    {
+      "label": "Generate code coverage",
+      "type": "shell",
+      "command": "./coverage.sh",
+      "detail": "Generate code coverage"
+    }
+  ]
+}

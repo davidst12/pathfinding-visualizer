@@ -1,6 +1,6 @@
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <gtest/gtest.h>
 
-TEST_CASE("Simple test") {
-    REQUIRE(1 + 1 == 2);
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

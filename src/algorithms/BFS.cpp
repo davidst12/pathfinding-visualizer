@@ -1,71 +1,115 @@
-#include "BFS.h"
+#include "Pathfinding/algorithms/BFS.hpp"
 
-BFS::BFS(Grid& grid)
-    :grid_(grid)
-{
-    algorithmStateChange(AlgorithmState::IDLE);
-    // El nodo inicial siempre va a ser visitado
-    result_.nodes_visited_count = 1;
-    result_.nodes_visited_ratio = 0;
+#include "Pathfinding/player/AlgorithmPreparation.hpp"
+
+BFS::BFS() {
+    algorithmStateChange(AlgorithmState::kIdle);
 }
 
-void BFS::runAlgorithm() {
-    nodes_to_process_queue_.push(grid_.startNode_);
-    algorithmStateChange(AlgorithmState::RUNNING);
-    
+bool BFS::prepare(Grid& grid) {
+    resetAlgorithm(grid);
+    algorithmStateChange(AlgorithmState::kReady);
+
+    return true;
+}
+
+AlgorithmResult BFS::solve() {
+    if (m_result.state != AlgorithmState::kRunning && m_result.state != AlgorithmState::kReady) {
+        return m_result;
+    }
+    algorithmStateChange(AlgorithmState::kRunning);
+
     auto start = std::chrono::high_resolution_clock::now();
-    
-    while(!nodes_to_process_queue_.empty() && result_.state == AlgorithmState::RUNNING) {
+
+    while (!m_nodes_to_process_queue.empty() && m_result.state == AlgorithmState::kRunning) {
         processNode();
     }
 
     auto stop = std::chrono::high_resolution_clock::now();
-    result_.time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    m_result.time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    if(result_.state == AlgorithmState::PATH_FOUND) {
-        result_.path = getPath();
-        grid_.printGridAndPath(result_.path);
+    if (m_result.state == AlgorithmState::kPathFound) {
+        m_result.path = getPath();
     } else {
-        algorithmStateChange(AlgorithmState::PATH_NOT_FOUND);
+        algorithmStateChange(AlgorithmState::kPathNotFound);
     }
     generateStatistics();
+
+    return m_result;
+}
+
+AlgorithmResult BFS::step() {
+    if (m_result.state != AlgorithmState::kRunning && m_result.state != AlgorithmState::kReady) {
+        return m_result;
+    }
+    algorithmStateChange(AlgorithmState::kRunning);
+
+    if (!m_nodes_to_process_queue.empty() && m_result.state == AlgorithmState::kRunning) {
+        processNode();
+    }
+    if (m_result.state == AlgorithmState::kPathFound) {
+        m_result.path = getPath();
+    } else if (m_nodes_to_process_queue.empty()) {
+        algorithmStateChange(AlgorithmState::kPathNotFound);
+    }
+    generateStatistics();
+
+    return m_result;
+}
+
+void BFS::resetAlgorithm(Grid& grid) {
+    m_result.nodes_processed_count = 0;
+    m_result.nodes_processed_ratio = 0;
+    m_result.path = std::vector<Node>();
+
+    m_grid = grid;
+    m_grid.start_node = m_grid.getNodeFromPosition(m_grid.start_node->getPosition());
+    m_grid.end_node = m_grid.getNodeFromPosition(m_grid.end_node->getPosition());
+
+    m_nodes_to_process_queue = std::queue<Node*>();
+    m_nodes_to_process_queue.push(m_grid.start_node);
 }
 
 void BFS::processNode() {
-    Node* current_node = nodes_to_process_queue_.front();
-    current_node->setVisited(true);
-    result_.nodes_visited_count += 1;
+    Node* current_node = m_nodes_to_process_queue.front();
+    current_node->setState(NodeState::kProcessed);
+    m_result.nodes_processed_count += 1;
 
-    if(current_node->getType() == NodeType::END) {
-        algorithmStateChange(AlgorithmState::PATH_FOUND);
+    if (current_node->getType() == NodeType::kEnd) {
+        algorithmStateChange(AlgorithmState::kPathFound);
         return;
     }
-    nodes_to_process_queue_.pop();
+    m_nodes_to_process_queue.pop();
     checkNeightbors(current_node);
 }
 
 void BFS::checkNeightbors(Node* current_node) {
-    for(int index = 0; index < 4; index++) {
-        Position neightbor_position = current_node->getPosition() + neighbors_check_order[index];
-        Node* neightbor_node = grid_.getNodeFromPosition(neightbor_position);
+    for (int index = 0; index < 4; index++) {
+        Position neightbor_position =
+            current_node->getPosition() + m_neighbors_check_order.at(index);
+        Node* neightbor_node = m_grid.getNodeFromPosition(neightbor_position);
 
-        if(neightbor_node->isVisited() == false && neightbor_node->getType() != NodeType::WALL) {
+        if (neightbor_node->getState() == NodeState::kUndiscovered &&
+            neightbor_node->getType() != NodeType::kWall) {
             neightbor_node->setParent(current_node);
-            neightbor_node->setVisited(true);
-            nodes_to_process_queue_.push(neightbor_node);
+            neightbor_node->setState(NodeState::kDiscovered);
+            m_nodes_to_process_queue.push(neightbor_node);
+            neightbor_node->setPathWeight(current_node->getPathWeight() +
+                                          neightbor_node->getWeight());
         }
     }
 }
 
 std::vector<Node> BFS::getPath() {
+    if (m_result.state != AlgorithmState::kPathFound) {
+        return std::vector<Node>();
+    }
     std::vector<Node> path;
-    Node* n = grid_.endNode_;
-    while (true)
-    {
-        if(n->getParent() != nullptr) {
-            path.push_back(*n);
-            n = n->getParent();
-        } else {
+    Node* node = m_grid.end_node;
+    while (true) {
+        path.push_back(*node);
+        node = node->getParent();
+        if (node == nullptr) {
             break;
         }
     }
@@ -73,18 +117,14 @@ std::vector<Node> BFS::getPath() {
 }
 
 void BFS::algorithmStateChange(AlgorithmState state) {
-    if(result_.state != state) {
-        std::cout << "Algorithm state: " << state_to_string(state) << std::endl;
-        result_.state = state;
+    if (m_result.state != state) {
+        m_result.state = state;
     }
 }
 
 void BFS::generateStatistics() {
-    result_.nodes_visited_ratio = 100 * result_.nodes_visited_count / grid_.getEmptyNodesCount();
-
-    std::cout << "Algorithm statistics: \n"
-        << "  Nodes visited: " << result_.nodes_visited_count << "(" <<  grid_.getEmptyNodesCount() << ")\n"
-        << "  Nodes visited ratio: " << result_.nodes_visited_ratio << "%" << std::endl
-        << "  Time spent (microseconds): " << result_.time.count() << std::endl
-        << "  Path size: " << result_.path.size() << std::endl;
+    m_result.algorithm_type = AlgorithmType::kBFS;
+    m_result.nodes_processed_ratio =
+        100 * m_result.nodes_processed_count / m_grid.getEmptyNodesCount();
+    m_result.grid_resolved = &m_grid;
 }
